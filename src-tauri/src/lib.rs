@@ -1,0 +1,57 @@
+pub mod error;
+pub mod logging;
+mod workspace;
+
+use specta_typescript::Typescript;
+use std::io;
+use std::path::PathBuf;
+use tauri::Manager;
+use tauri_specta::{collect_commands, Builder};
+
+const TYPED_ERROR_IMPL: &str = r#"async function typedError<T, E>(result: Promise<T>): Promise<{ status: "ok"; data: T } | { status: "error"; error: E }> {
+    try {
+        return { status: "ok", data: await result };
+    } catch (error) {
+        if (error instanceof Error) {
+            throw error;
+        }
+        return { status: "error", error: error as unknown as E };
+    }
+}"#;
+
+fn command_builder() -> Builder<tauri::Wry> {
+    Builder::new()
+        .typed_error_impl(TYPED_ERROR_IMPL)
+        .commands(collect_commands![workspace::workspace_status])
+}
+
+pub fn export_bindings() -> io::Result<()> {
+    command_builder()
+        .export(Typescript::default(), bindings_path())
+        .map_err(|error| io::Error::other(error.to_string()))
+}
+
+fn bindings_path() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../src/bindings.ts")
+}
+
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
+pub fn run() -> tauri::Result<()> {
+    #[cfg(debug_assertions)]
+    export_bindings()?;
+
+    let command_builder = command_builder();
+
+    tauri::Builder::default()
+        .setup(move |app| {
+            let data_directory = app.path().data_dir()?;
+            let root = workspace::workspace_root(data_directory);
+            let logging_guard = logging::initialize_logging(root.join("logs"))?;
+            app.manage(logging_guard);
+            workspace::initialize_for_root(root)?;
+            tracing::info!(event = "application_started", "Flow Studio started");
+            Ok(())
+        })
+        .invoke_handler(command_builder.invoke_handler())
+        .run(tauri::generate_context!())
+}

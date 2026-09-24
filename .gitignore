@@ -1,0 +1,41 @@
+# Node and frontend outputs
+node_modules/
+dist/
+storybook-static/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# Tauri and Rust outputs
+target/
+src-tauri/target/
+
+# Local application state and generated assets
+.flow-studio/
+flow_studio.db
+flow_studio.db-*
+*.flowproj
+assets/generated/
+assets/cache/
+exports/
+logs/
+crash-dumps/
+
+# Environment and sensitive local material
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Installer artifacts
+src-tauri/binaries/
+src-tauri/target/release/bundle/

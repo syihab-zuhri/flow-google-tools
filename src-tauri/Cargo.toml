@@ -1,0 +1,30 @@
+[package]
+name = "flow-studio"
+version = "0.1.0"
+description = "Local-first long-form AI video workflow studio"
+authors = ["Zuhri"]
+edition = "2021"
+rust-version = "1.93"
+
+[lib]
+name = "flow_studio_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "export-bindings"
+path = "src/bin/export-bindings.rs"
+
+[build-dependencies]
+tauri-build = { version = "=2.6.3", features = [] }
+
+[dependencies]
+flow-core = { path = "../crates/flow-core" }
+regex = "=1.13.1"
+serde = { version = "=1.0.228", features = ["derive"] }
+specta = { version = "=2.0.0-rc.25", features = ["derive"] }
+specta-typescript = "=0.0.12"
+tauri = { version = "=2.11.6", features = [] }
+tauri-specta = { version = "=2.0.0-rc.25", features = ["typescript"] }
+tracing = "=0.1.44"
+tracing-appender = "=0.2.5"
+tracing-subscriber = { version = "=0.3.23", features = ["fmt", "json"] }

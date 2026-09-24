@@ -19,6 +19,21 @@ Dokumen `CHANGELOG.md` berfungsi sebagai catatan historis komprehensif, log audi
 
 ## 1. Log Perubahan Versi Dokumen Blueprint
 
+## [Unreleased]
+
+### Added
+- **Phase 0 Implementation Complete:**
+  - Tauri 2.x desktop shell configured with Vite 8 + React 19 + TypeScript + Tailwind CSS.
+  - Rust workspace modular structure (`crates/flow-core` and `src-tauri`).
+  - Local database engine in `flow-core` with WAL mode, foreign keys, and migration checksum validation (`V001__initial_local_schema.sql`).
+  - Contract-first IPC via `tauri-specta` generating type-safe bindings to `src/bindings.ts`.
+  - Canonical `IpcError` envelope with structured error codes (`E_STORAGE_WORKSPACE_INITIALIZATION_FAILED`).
+  - Diagnostic logging system via `tracing` with size-based rolling files, retention limits, and regex-based secret/PII sanitization.
+  - Strict CI Quality Gates workflow (`.github/workflows/ci.yml`) enforcing cargo fmt, clippy, cargo audit, eslint, tsc, vitest, and aislop.
+  - Component Storybook configuration with a11y testing parameter and 6 visual state stories for `WorkspaceStatusCard`.
+  - 100/100 Healthy score achieved on `aislop scan` with zero hard/standard violations.
+  - Change Request `CR-001` accepted to establish supported provider boundary and exclude unauthorized cookie/session extraction.
+
 ## [2026-09-24] — 1.0.0
 
 ### Added

@@ -1,0 +1,17 @@
+[package]
+name = "flow-core"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.93"
+description = "Framework-independent domain primitives for Flow Studio"
+license = "MIT"
+
+[lib]
+name = "flow_core"
+path = "src/lib.rs"
+
+[dependencies]
+rusqlite = { version = "=0.40.2", features = ["bundled"] }
+serde = { version = "=1.0.228", features = ["derive"] }
+sha2 = "=0.10.9"
+specta = { version = "=2.0.0-rc.25", features = ["derive"] }

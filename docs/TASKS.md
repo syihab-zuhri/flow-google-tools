@@ -25,7 +25,7 @@ Sesuai dengan ketentuan standar rekayasa perangkat lunak pada `PLANNING_v5.2.md`
 
 | Fase | Nama Fase & Ruang Lingkup Utama | Total Task | Estimasi Durasi | Deliverable Kunci |
 |---|---|---|---|---|
-| **Phase 0** | Project Foundations, Tauri 2.x Scaffold, SQLite Setup, CI Quality Gates | 7 Task | 1 Minggu | Monorepo scaffold, SQLite schema v1, strict CI quality gates |
+| **Phase 0** | Project Foundations, Tauri 2.x Scaffold, SQLite Setup, CI Quality Gates | 7 Task | Selesai | Monorepo scaffold, SQLite schema v1, strict CI quality gates (7/7 complete) |
 | **Phase 1** | Security & Credential Vault (Argon2id, AES-256-GCM, Master Password, Auto-Lock) | 7 Task | 1 Minggu | Vault enclave, zeroize buffer, auto-lock daemon, unlock modal |
 | **Phase 2** | Flow-Router Module (Account Pool, Cookie Ingestion, Credit Tracking, Auto-Rotation) | 7 Task | 2 Minggu | HTTP client, cookie parser, multi-account rotation, account drawer |
 | **Phase 3** | Node Editor UI (@xyflow/react Canvas, Custom Nodes, Edge Routing, DAG Validation) | 9 Task | 2.5 Minggu | Infinite canvas, 4 node types, edge snapping, DAG validator, `.flowproj` |
@@ -44,43 +44,43 @@ Sesuai dengan ketentuan standar rekayasa perangkat lunak pada `PLANNING_v5.2.md`
 
 Fase ini meletakkan fondasi teknis repositori, pipeline integrasi berkelanjutan (CI), basis data SQLite terkelola, sistem logging terstruktur, dan penegakan kualitas kode tanpa kompromi.
 
-- [ ] `TASK-P0-001` [Effort: S] Inisialisasi Monorepo & Tauri 2.x Desktop Shell Scaffold
+- [x] `TASK-P0-001` [Effort: S] Inisialisasi Monorepo & Tauri 2.x Desktop Shell Scaffold
   - Owner: DevOps
   - References: ADR-001, NFR-007, NFR-008
   - Depends on: None
   - Done when: Struktur workspace monorepo (frontend React 19 + Vite + Tailwind CSS dan backend `src-tauri` Rust 2021) terbuat, perintah `cargo tauri dev` berhasil me-render native desktop window pada Windows 10/11 x64 dalam < 3 detik tanpa runtime warning.
 
-- [ ] `TASK-P0-002` [Effort: S] Konfigurasi Strict CI Quality Gates (ESLint, Prettier, Clippy, tsc, cargo audit)
+- [x] `TASK-P0-002` [Effort: S] Konfigurasi Strict CI Quality Gates (ESLint, Prettier, Clippy, tsc, cargo audit)
   - Owner: DevOps
   - References: NFR-010, CODE_QUALITY.md §7.1, ADR-001
   - Depends on: TASK-P0-001
   - Done when: Pipeline GitHub Actions berjalan dengan 6 quality gates: `cargo audit`, `npm audit --audit-level=high`, `cargo fmt --check`, `prettier --check`, `cargo clippy --all-targets -- -D warnings`, `eslint --max-warnings 0`, `tsc --noEmit`, dan `aislop scan --threshold 75`.
 
-- [ ] `TASK-P0-003` [Effort: M] Setup Tauri-Specta Contract-First IPC Code Generator
+- [x] `TASK-P0-003` [Effort: M] Setup Tauri-Specta Contract-First IPC Code Generator
   - Owner: Tech Lead
   - References: API.md §2.1, ARCHITECTURE.md §2.2
   - Depends on: TASK-P0-001
   - Done when: Crate `tauri-specta` terkonfigurasi pada `src-tauri`, macro `collect_commands` mengekspor berkas binding TypeScript `src/bindings.ts` secara otomatis saat `cargo build`, dan tipe contracts sinkron antara Rust dan frontend tanpa deklarasi `any`.
 
-- [ ] `TASK-P0-004` [Effort: M] Inisialisasi SQLite Database Engine & Migration Manager
+- [x] `TASK-P0-004` [Effort: M] Inisialisasi SQLite Database Engine & Migration Manager
   - Owner: Backend
   - References: ERD.md §1.2, DOC-MIG-001, NFR-004
   - Depends on: TASK-P0-001
   - Done when: Modul `db.rs` berhasil membuka koneksi SQLite di path `%APPDATA%/FlowStudio/flow_studio.db` dengan WAL mode (`PRAGMA journal_mode = WAL`), foreign keys aktif (`PRAGMA foreign_keys = ON`), timeout 5000ms, serta tabel `_schema_migrations` terbuat dan teruji.
 
-- [ ] `TASK-P0-005` [Effort: S] Eksekusi Skema DDL Database Lengkap untuk Semua Entitas
+- [x] `TASK-P0-005` [Effort: S] Eksekusi Skema DDL Database Lengkap untuk Semua Entitas
   - Owner: Backend
   - References: ERD.md §2, ERD.md §3, NFR-004
   - Depends on: TASK-P0-004
   - Done when: Seluruh tabel (`credential_vault`, `accounts`, `projects`, `segments`, `generation_log`, `security_audit_log`) dan indeks relasional terbuat via migrasi v1, dan eksekusi `PRAGMA integrity_check` mengembalikan nilai `ok`.
 
-- [ ] `TASK-P0-006` [Effort: S] Implementasi Structured Local Diagnostic Logging System
+- [x] `TASK-P0-006` [Effort: S] Implementasi Structured Local Diagnostic Logging System
   - Owner: Backend
   - References: NFR-012, SECURITY.md §2.2
   - Depends on: TASK-P0-001
   - Done when: Crate `tracing` dan `tracing-appender` memancarkan file log JSON di `%APPDATA%/FlowStudio/logs/`, rotasi log aktif pada ukuran 10MB (maksimal 5 arsip), dan filter sanitasi membuktikan seluruh kredensial ter-masking (`u***r@gmail.com`) tanpa ada token mentah di log.
 
-- [ ] `TASK-P0-007` [Effort: S] Setup Test Runners (Vitest + React Testing Library & Cargo Test)
+- [x] `TASK-P0-007` [Effort: S] Setup Test Runners (Vitest + React Testing Library & Cargo Test)
   - Owner: DevOps
   - References: CODE_QUALITY.md §7.1, NFR-010
   - Depends on: TASK-P0-002
@@ -491,6 +491,7 @@ Sidecar YAML di bawah ini dihasilkan secara otomatis dan sepenuhnya sinkron deng
   phase: 0
   kind: feature
   effort: S
+  status: completed
   owner: DevOps
   depends_on: []
   refs: [ADR-001, NFR-007, NFR-008]
@@ -501,6 +502,7 @@ Sidecar YAML di bawah ini dihasilkan secara otomatis dan sepenuhnya sinkron deng
   phase: 0
   kind: feature
   effort: S
+  status: completed
   owner: DevOps
   depends_on: [TASK-P0-001]
   refs: [NFR-010, CODE_QUALITY.md §7.1, ADR-001]
@@ -511,6 +513,7 @@ Sidecar YAML di bawah ini dihasilkan secara otomatis dan sepenuhnya sinkron deng
   phase: 0
   kind: feature
   effort: M
+  status: completed
   owner: Tech Lead
   depends_on: [TASK-P0-001]
   refs: [API.md §2.1, ARCHITECTURE.md §2.2]
@@ -521,6 +524,7 @@ Sidecar YAML di bawah ini dihasilkan secara otomatis dan sepenuhnya sinkron deng
   phase: 0
   kind: feature
   effort: M
+  status: completed
   owner: Backend
   depends_on: [TASK-P0-001]
   refs: [ERD.md §1.2, DOC-MIG-001, NFR-004]
@@ -531,6 +535,7 @@ Sidecar YAML di bawah ini dihasilkan secara otomatis dan sepenuhnya sinkron deng
   phase: 0
   kind: feature
   effort: S
+  status: completed
   owner: Backend
   depends_on: [TASK-P0-004]
   refs: [ERD.md §2, ERD.md §3, NFR-004]
@@ -541,6 +546,7 @@ Sidecar YAML di bawah ini dihasilkan secara otomatis dan sepenuhnya sinkron deng
   phase: 0
   kind: feature
   effort: S
+  status: completed
   owner: Backend
   depends_on: [TASK-P0-001]
   refs: [NFR-012, SECURITY.md §2.2]
@@ -551,6 +557,7 @@ Sidecar YAML di bawah ini dihasilkan secara otomatis dan sepenuhnya sinkron deng
   phase: 0
   kind: feature
   effort: S
+  status: completed
   owner: DevOps
   depends_on: [TASK-P0-002]
   refs: [CODE_QUALITY.md §7.1, NFR-010]

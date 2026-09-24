@@ -1,0 +1,339 @@
+@import "tailwindcss";
+
+:root {
+  color: #f1f5f9;
+  background: #0f172a;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100dvh;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button:focus-visible {
+  outline: 3px solid #38bdf8;
+  outline-offset: 3px;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(248px, 0.31fr) minmax(0, 1fr);
+  min-height: 100dvh;
+  background: #0f172a;
+}
+
+.app-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px;
+  border-right: 1px solid #334155;
+  background: #0b0f19;
+}
+
+.app-identity__mark {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid #2563eb;
+  border-radius: 12px;
+  color: #dbeafe;
+  background: #172554;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.app-identity__eyebrow,
+.app-workspace__eyebrow,
+.workspace-status__eyebrow,
+.next-capability__eyebrow {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-identity__label {
+  margin: 4px 0 0;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.app-identity__security {
+  margin: auto 0 0;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.app-workspace {
+  display: grid;
+  align-content: center;
+  gap: 32px;
+  width: min(100%, 1000px);
+  margin: 0 auto;
+  padding: clamp(32px, 6vw, 96px);
+}
+
+.app-workspace__intro {
+  max-width: 720px;
+}
+
+.app-workspace__intro h1 {
+  max-width: 680px;
+  margin: 12px 0 16px;
+  color: #f8fafc;
+  font-size: clamp(2rem, 5vw, 4.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+}
+
+.app-workspace__intro > p:last-child {
+  max-width: 640px;
+  margin: 0;
+  color: #cbd5e1;
+  font-size: clamp(1rem, 1.8vw, 1.125rem);
+  line-height: 1.65;
+}
+
+.app-workspace__ready {
+  display: grid;
+  gap: 16px;
+}
+
+.workspace-status,
+.handoff-boundary,
+.next-capability,
+.app-state {
+  border: 1px solid #334155;
+  border-radius: 12px;
+  background: #1e293b;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.35);
+}
+
+.workspace-status {
+  padding: 24px;
+}
+
+.workspace-status__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.workspace-status h2,
+.handoff-boundary h2,
+.next-capability h2,
+.app-state h2 {
+  margin: 6px 0 0;
+  color: #f8fafc;
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.workspace-status__badge {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+  color: #dbeafe;
+  background: #172554;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.workspace-status__details {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  margin: 24px 0 0;
+}
+
+.workspace-status__details div {
+  min-width: 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: #131d2e;
+}
+
+.workspace-status__details dt {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.workspace-status__details dd {
+  overflow: hidden;
+  margin: 6px 0 0;
+  color: #e2e8f0;
+  font-family: "JetBrains Mono", "Cascadia Code", monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.handoff-boundary {
+  display: grid;
+  grid-template-columns: 4px minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.handoff-boundary__marker {
+  background: #f59e0b;
+}
+
+.handoff-boundary > div:last-child {
+  padding: 20px 24px;
+}
+
+.handoff-boundary p,
+.next-capability p,
+.app-state p {
+  margin: 10px 0 0;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.next-capability {
+  padding: 20px 24px;
+  background: #131d2e;
+}
+
+.app-state {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 88px;
+  padding: 20px 24px;
+}
+
+.app-state--error {
+  display: block;
+  border-color: #ef4444;
+}
+
+.app-state__indicator {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+  border: 2px solid #334155;
+  border-top-color: #38bdf8;
+  border-radius: 50%;
+  animation: workspace-spin 800ms linear infinite;
+}
+
+.app-action {
+  min-height: 44px;
+  margin-top: 16px;
+  padding: 0 16px;
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+  color: #eff6ff;
+  background: #185fa5;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.app-action:hover {
+  background: #1e88e5;
+}
+
+@keyframes workspace-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1023px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .app-identity {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) minmax(180px, 0.5fr);
+    align-items: center;
+    padding: 20px 24px;
+    border-right: 0;
+    border-bottom: 1px solid #334155;
+  }
+
+  .app-identity__security {
+    margin: 0;
+    text-align: right;
+  }
+}
+
+@media (max-width: 767px) {
+  .app-identity {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .app-identity__security {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .app-workspace {
+    align-content: start;
+    padding: 32px 16px 48px;
+  }
+
+  .workspace-status,
+  .handoff-boundary > div:last-child,
+  .next-capability,
+  .app-state {
+    padding: 16px;
+  }
+
+  .workspace-status__header {
+    flex-direction: column;
+  }
+
+  .workspace-status__details {
+    grid-template-columns: 1fr;
+    margin-top: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-state__indicator {
+    animation: none;
+  }
+}
