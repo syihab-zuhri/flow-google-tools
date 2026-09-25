@@ -4,318 +4,289 @@ import { invoke as __TAURI_INVOKE } from "@tauri-apps/api/core";
 
 /** Commands */
 export const commands = {
-  workspaceStatus: () =>
-    typedError<WorkspaceStatusResponse, IpcError>(
-      __TAURI_INVOKE("workspace_status"),
-    ),
-  saveProject: (request: SaveProjectRequest) =>
-    typedError<SaveProjectResponse, IpcError>(
-      __TAURI_INVOKE("save_project", {
-        request: {
-          ...request,
-          graph: { ...request.graph, nodes: request.graph.nodes.map((i) => i) },
-        },
-      }),
-    ),
-  loadProject: (filePath: string) =>
-    typedError<LoadProjectResponse, IpcError>(
-      __TAURI_INVOKE("load_project", { filePath }),
-    ).then(
-      (v) =>
-        (v.status === "ok"
-          ? {
-              ...v,
-              data: {
-                ...v.data,
-                graph: {
-                  ...v.data.graph,
-                  nodes: v.data.graph.nodes.map((i) => i),
-                },
-              },
-            }
-          : v) as typeof v,
-    ),
-  extractFrame: (request: ExtractFrameRequest) =>
-    typedError<ExtractFrameResponse, IpcError>(
-      __TAURI_INVOKE("extract_frame", { request }),
-    ),
-  getPromptContext: (request: PromptContextRequest) =>
-    typedError<ComposedPromptResponse, IpcError>(
-      __TAURI_INVOKE("get_prompt_context", { request }),
-    ),
-  setStyleLock: (projectId: string, styleLockText: string | null) =>
-    typedError<StyleLockResponse, IpcError>(
-      __TAURI_INVOKE("set_style_lock", { projectId, styleLockText }),
-    ),
-  concatSegments: (request: ConcatSegmentsRequest) =>
-    typedError<ExportVideoResponse, IpcError>(
-      __TAURI_INVOKE("concat_segments", { request }),
-    ),
-  previewExport: (projectId: string, segmentPaths: string[]) =>
-    typedError<PreviewExportResponse, IpcError>(
-      __TAURI_INVOKE("preview_export", { projectId, segmentPaths }),
-    ),
-  exportVideo: (request: ExportVideoRequest) =>
-    typedError<ExportVideoResponse, IpcError>(
-      __TAURI_INVOKE("export_video", { request }),
-    ),
-  exportSegment: (request: ExportSegmentRequest) =>
-    typedError<ExportSegmentResponse, IpcError>(
-      __TAURI_INVOKE("export_segment", { request }),
-    ),
-  setupVault: (request: SetupVaultRequest) =>
-    typedError<SetupVaultResponse, IpcError>(
-      __TAURI_INVOKE("setup_vault", { request }),
-    ),
-  unlockVault: (request: UnlockVaultRequest) =>
-    typedError<UnlockVaultResponse, IpcError>(
-      __TAURI_INVOKE("unlock_vault", { request }),
-    ),
-  lockVault: () =>
-    typedError<LockVaultResponse, IpcError>(__TAURI_INVOKE("lock_vault")),
-  checkVaultStatus: () =>
-    typedError<VaultStatusResponse, IpcError>(
-      __TAURI_INVOKE("check_vault_status"),
-    ),
-  resetVault: (request: ResetVaultRequest) =>
-    typedError<ResetVaultResponse, IpcError>(
-      __TAURI_INVOKE("reset_vault", { request }),
-    ),
+	workspaceStatus: () => typedError<WorkspaceStatusResponse, IpcError>(__TAURI_INVOKE("workspace_status")),
+	saveProject: (request: SaveProjectRequest) => typedError<SaveProjectResponse, IpcError>(__TAURI_INVOKE("save_project", { request: ({...request,graph:({...request.graph,nodes:request.graph.nodes.map(i=>i)})}) })),
+	loadProject: (filePath: string) => typedError<LoadProjectResponse, IpcError>(__TAURI_INVOKE("load_project", { filePath })).then((v) => ((v.status === "ok" ? { ...v, data: ({...v.data,graph:({...v.data.graph,nodes:v.data.graph.nodes.map(i=>i)})}) } : v) as typeof v)),
+	extractFrame: (request: ExtractFrameRequest) => typedError<ExtractFrameResponse, IpcError>(__TAURI_INVOKE("extract_frame", { request })),
+	getPromptContext: (request: PromptContextRequest) => typedError<ComposedPromptResponse, IpcError>(__TAURI_INVOKE("get_prompt_context", { request })),
+	setStyleLock: (projectId: string, styleLockText: string | null) => typedError<StyleLockResponse, IpcError>(__TAURI_INVOKE("set_style_lock", { projectId, styleLockText })),
+	concatSegments: (request: ConcatSegmentsRequest) => typedError<ExportVideoResponse, IpcError>(__TAURI_INVOKE("concat_segments", { request })),
+	previewExport: (projectId: string, segmentPaths: string[]) => typedError<PreviewExportResponse, IpcError>(__TAURI_INVOKE("preview_export", { projectId, segmentPaths })),
+	exportVideo: (request: ExportVideoRequest) => typedError<ExportVideoResponse, IpcError>(__TAURI_INVOKE("export_video", { request })),
+	exportSegment: (request: ExportSegmentRequest) => typedError<ExportSegmentResponse, IpcError>(__TAURI_INVOKE("export_segment", { request })),
+	setupVault: (request: SetupVaultRequest) => typedError<SetupVaultResponse, IpcError>(__TAURI_INVOKE("setup_vault", { request })),
+	unlockVault: (request: UnlockVaultRequest) => typedError<UnlockVaultResponse, IpcError>(__TAURI_INVOKE("unlock_vault", { request })),
+	lockVault: () => typedError<LockVaultResponse, IpcError>(__TAURI_INVOKE("lock_vault")),
+	checkVaultStatus: () => typedError<VaultStatusResponse, IpcError>(__TAURI_INVOKE("check_vault_status")),
+	resetVault: (request: ResetVaultRequest) => typedError<ResetVaultResponse, IpcError>(__TAURI_INVOKE("reset_vault", { request })),
+	bridgeStart: (port: number | null) => typedError<BridgeServerInfo, IpcError>(__TAURI_INVOKE("bridge_start", { port })),
+	bridgeStop: () => typedError<BridgeServerInfo, IpcError>(__TAURI_INVOKE("bridge_stop")),
+	bridgeDispatch: (request: BridgeDispatchRequest) => typedError<BridgeServerInfo, IpcError>(__TAURI_INVOKE("bridge_dispatch", { request })),
+	bridgeStatus: () => typedError<BridgeServerInfo, IpcError>(__TAURI_INVOKE("bridge_status")),
 };
 
 /* Types */
+export type BridgeDispatchRequest = {
+	jobId: string,
+	prompt: string,
+	kind: BridgeJobKind,
+	model: string,
+	aspectRatio: string,
+	variations?: number,
+	duration?: string | null,
+	autoDownload?: boolean,
+	downloadPrefix?: string | null,
+};
+
+export type BridgeJobKind = "image" | "video";
+
+export type BridgeJobRecord = {
+	jobId: string,
+	prompt: string,
+	kind: BridgeJobKind,
+	state: BridgeJobState,
+	phase: string | null,
+	error: string | null,
+	files: string[],
+	assets: string[],
+};
+
+export type BridgeJobState = "awaiting" | "running" | "succeeded" | "failed" | "cancelled" | "lost";
+
+export type BridgeServerInfo = {
+	running: boolean,
+	boundAddress: string,
+	port: number,
+	token: string | null,
+	activeConnections: number,
+	pendingJobCount: number,
+	jobs: BridgeJobRecord[],
+};
+
 export type ComposedPromptResponse = {
-  finalComposedPrompt: string;
-  styleLockApplied: string | null;
-  contextCarryOverApplied: string | null;
-  totalCharacters: number;
-  isTruncated: boolean;
+	finalComposedPrompt: string,
+	styleLockApplied: string | null,
+	contextCarryOverApplied: string | null,
+	totalCharacters: number,
+	isTruncated: boolean,
 };
 
 export type ConcatSegmentsRequest = {
-  clientRequestId: string;
-  projectId: string;
-  segmentPaths: string[];
-  outputPath: string;
-  format: OutputFormat;
-  resolution: ResolutionPreset;
+	clientRequestId: string,
+	projectId: string,
+	segmentPaths: string[],
+	outputPath: string,
+	format: OutputFormat,
+	resolution: ResolutionPreset,
 };
 
-export type ErrorDomain =
-  | "STORAGE"
-  | "PROJECT"
-  | "CONTINUITY"
-  | "EXPORT"
-  | "VAULT";
+export type ErrorDomain = "STORAGE" | "PROJECT" | "CONTINUITY" | "EXPORT" | "VAULT" | "BRIDGE";
 
 export type ExportSegmentRequest = {
-  segmentId: string;
-  sourceVideoPath: string;
-  targetPath: string;
-  format: OutputFormat;
-  resolution: ResolutionPreset;
+	segmentId: string,
+	sourceVideoPath: string,
+	targetPath: string,
+	format: OutputFormat,
+	resolution: ResolutionPreset,
 };
 
 export type ExportSegmentResponse = {
-  exportedPath: string;
-  fileSizeBytes: number;
+	exportedPath: string,
+	fileSizeBytes: number,
 };
 
 export type ExportVideoRequest = {
-  clientRequestId: string;
-  projectId: string;
-  format: OutputFormat;
-  resolution: ResolutionPreset;
-  videoBitrateKbps: number | null;
-  audioBitrateKbps: number | null;
-  outputDirectory: string;
-  customFilename: string | null;
+	clientRequestId: string,
+	projectId: string,
+	format: OutputFormat,
+	resolution: ResolutionPreset,
+	videoBitrateKbps: number | null,
+	audioBitrateKbps: number | null,
+	outputDirectory: string,
+	customFilename: string | null,
 };
 
 export type ExportVideoResponse = {
-  success: boolean;
-  outputPath: string;
-  durationSeconds: number | null;
-  fileSizeBytes: number;
+	success: boolean,
+	outputPath: string,
+	durationSeconds: number | null,
+	fileSizeBytes: number,
 };
 
 export type ExtractFrameRequest = {
-  videoPath: string;
-  outputDirectory: string;
-  method: string;
+	videoPath: string,
+	outputDirectory: string,
+	method: string,
 };
 
 export type ExtractFrameResponse = {
-  framePath: string;
-  resolution: FrameResolution;
-  extractionDurationMs: number;
+	framePath: string,
+	resolution: FrameResolution,
+	extractionDurationMs: number,
 };
 
 export type FrameResolution = {
-  width: number;
-  height: number;
+	width: number,
+	height: number,
 };
 
 export type IpcError = {
-  code: string;
-  message: string;
-  domain: ErrorDomain;
-  details: { [key in string]: string };
-  timestamp: number | null;
-  retryable: boolean;
+	code: string,
+	message: string,
+	domain: ErrorDomain,
+	details: { [key in string]: string },
+	timestamp: number | null,
+	retryable: boolean,
 };
 
 export type LoadProjectResponse = {
-  projectName: string;
-  version: string;
-  settings: ProjectSettings;
-  graph: ProjectGraphData;
-  assets: string[];
-  updatedAt: string;
+	projectName: string,
+	version: string,
+	settings: ProjectSettings,
+	graph: ProjectGraphData,
+	assets: string[],
+	updatedAt: string,
 };
 
 export type LockVaultResponse = {
-  status: string;
-  lockedAt: number;
+	status: string,
+	lockedAt: number,
 };
 
 export type NodePosition = {
-  x: number | null;
-  y: number | null;
+	x: number | null,
+	y: number | null,
 };
 
 export type OutputFormat = "mp4" | "webm";
 
 export type PreviewExportResponse = {
-  previewFilePath: string;
-  segmentMarkers: (number | null)[];
-  totalDurationSeconds: number | null;
+	previewFilePath: string,
+	segmentMarkers: (number | null)[],
+	totalDurationSeconds: number | null,
 };
 
 export type ProjectEdge = {
-  id: string;
-  source: string;
-  target: string;
-  sourceHandle: string | null;
-  targetHandle: string | null;
+	id: string,
+	source: string,
+	target: string,
+	sourceHandle: string | null,
+	targetHandle: string | null,
 };
 
 export type ProjectGraphData = {
-  nodes: ProjectNode[];
-  edges: ProjectEdge[];
-  viewport: ViewportData;
+	nodes: ProjectNode[],
+	edges: ProjectEdge[],
+	viewport: ViewportData,
 };
 
 export type ProjectNode = {
-  id: string;
-  type: string;
-  position: NodePosition;
-  data: any;
+	id: string,
+	type: string,
+	position: NodePosition,
+	data: any,
 };
 
 export type ProjectSettings = {
-  defaultModel: string;
-  autoSaveIntervalSeconds: number;
-  styleLockText: string | null;
+	defaultModel: string,
+	autoSaveIntervalSeconds: number,
+	styleLockText: string | null,
 };
 
 export type PromptContextRequest = {
-  currentPrompt: string;
-  previousPrompts: string[];
-  styleLockText: string | null;
+	currentPrompt: string,
+	previousPrompts: string[],
+	styleLockText: string | null,
 };
 
 export type ProviderMode = "manual_handoff" | "official_api";
 
 export type ResetVaultRequest = {
-  confirmationFlag: string;
+	confirmationFlag: string,
 };
 
 export type ResetVaultResponse = {
-  success: boolean;
-  wipedAt: number;
+	success: boolean,
+	wipedAt: number,
 };
 
 export type ResolutionPreset = "original" | "1080p" | "720p";
 
 export type SaveProjectRequest = {
-  filePath: string;
-  projectName: string;
-  settings: ProjectSettings;
-  graph: ProjectGraphData;
+	filePath: string,
+	projectName: string,
+	settings: ProjectSettings,
+	graph: ProjectGraphData,
 };
 
 export type SaveProjectResponse = {
-  savedPath: string;
-  savedAt: string;
-  fileSizeBytes: number;
+	savedPath: string,
+	savedAt: string,
+	fileSizeBytes: number,
 };
 
 export type SetupVaultRequest = {
-  clientRequestId: string;
-  masterPassword: string;
-  confirmPassword: string;
-  autoLockTimeoutMinutes: number | null;
+	clientRequestId: string,
+	masterPassword: string,
+	confirmPassword: string,
+	autoLockTimeoutMinutes: number | null,
 };
 
 export type SetupVaultResponse = {
-  status: string;
-  vaultCreatedAt: number;
-  autoLockTimeoutMinutes: number;
+	status: string,
+	vaultCreatedAt: number,
+	autoLockTimeoutMinutes: number,
 };
 
 export type StyleLockResponse = {
-  projectId: string;
-  styleLockText: string | null;
-  updatedAt: number;
+	projectId: string,
+	styleLockText: string | null,
+	updatedAt: number,
 };
 
 export type UnlockVaultRequest = {
-  masterPassword: string;
+	masterPassword: string,
 };
 
 export type UnlockVaultResponse = {
-  status: string;
-  unlockedAt: number;
-  activeAccountCount: number;
+	status: string,
+	unlockedAt: number,
+	activeAccountCount: number,
 };
 
 export type VaultState = "uninitialized" | "locked" | "unlocked";
 
 export type VaultStatusResponse = {
-  state: VaultState;
-  autoLockTimeoutMinutes: number;
-  hasActiveLockout: boolean;
-  lockoutRemainingSeconds: number | null;
-  lastUnlockedAt: number | null;
+	state: VaultState,
+	autoLockTimeoutMinutes: number,
+	hasActiveLockout: boolean,
+	lockoutRemainingSeconds: number | null,
+	lastUnlockedAt: number | null,
 };
 
 export type ViewportData = {
-  x: number | null;
-  y: number | null;
-  zoom: number | null;
+	x: number | null,
+	y: number | null,
+	zoom: number | null,
 };
 
 export type WorkspaceStatusResponse = {
-  databasePath: string;
-  migrationCount: number;
-  providerMode: ProviderMode;
+	databasePath: string,
+	migrationCount: number,
+	providerMode: ProviderMode,
 };
 
 /* Tauri Specta runtime */
-async function typedError<T, E>(
-  result: Promise<T>,
-): Promise<{ status: "ok"; data: T } | { status: "error"; error: E }> {
-  try {
-    return { status: "ok", data: await result };
-  } catch (error) {
-    if (error instanceof Error) {
-      throw error;
+async function typedError<T, E>(result: Promise<T>): Promise<{ status: "ok"; data: T } | { status: "error"; error: E }> {
+    try {
+        return { status: "ok", data: await result };
+    } catch (error) {
+        if (error instanceof Error) {
+            throw error;
+        }
+        return { status: "error", error: error as unknown as E };
     }
-    return { status: "error", error: error as unknown as E };
-  }
 }
 
-const _assertTypedErrorFollowsContract: <T, E>(
-  result: Promise<T>,
-) => Promise<any> = typedError;
+const _assertTypedErrorFollowsContract: <T, E>(result: Promise<T>) => Promise<any> = typedError;
+

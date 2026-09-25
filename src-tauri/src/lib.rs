@@ -1,3 +1,4 @@
+pub mod bridge;
 mod continuity;
 pub mod error;
 mod export;
@@ -47,6 +48,10 @@ fn command_builder() -> Builder<tauri::Wry> {
             vault::lock_vault,
             vault::check_vault_status,
             vault::reset_vault,
+            bridge::bridge_start,
+            bridge::bridge_stop,
+            bridge::bridge_dispatch,
+            bridge::bridge_status,
         ])
 }
 
@@ -74,6 +79,7 @@ pub fn run() -> tauri::Result<()> {
             let logging_guard = logging::initialize_logging(root.join("logs"))?;
             app.manage(logging_guard);
             workspace::initialize_for_root(root)?;
+            bridge::manage(app.handle());
             tracing::info!(event = "application_started", "Flow Studio started");
             Ok(())
         })

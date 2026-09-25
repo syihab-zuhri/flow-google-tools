@@ -1,6 +1,7 @@
 #![forbid(unsafe_code)]
 
 pub mod app_paths;
+pub mod bridge;
 pub mod continuity;
 pub mod database;
 pub mod export;

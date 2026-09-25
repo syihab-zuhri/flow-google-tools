@@ -13,9 +13,9 @@ fn with_vault<F, R>(f: F) -> Result<R, IpcError>
 where
     F: FnOnce(&mut VaultEngine) -> Result<R, IpcError>,
 {
-    let mut guard = VAULT_INSTANCE
-        .lock()
-        .map_err(|_| IpcError::vault_failed("E_VAULT_MUTEX_POISONED", "Vault mutex was poisoned"))?;
+    let mut guard = VAULT_INSTANCE.lock().map_err(|_| {
+        IpcError::vault_failed("E_VAULT_MUTEX_POISONED", "Vault mutex was poisoned")
+    })?;
 
     if guard.is_none() {
         *guard = Some(VaultEngine::new());

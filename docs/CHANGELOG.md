@@ -22,6 +22,15 @@ Dokumen `CHANGELOG.md` berfungsi sebagai catatan historis komprehensif, log audi
 ## [Unreleased]
 
 ### Added
+- **Phase 2B: Browser Bridge Module (ADR-009) Complete [TASK-P2B-001..003]:**
+  - Implemented loopback WebSocket server on port 48210 in Rust `flow_core::bridge` with token authentication and single-client session management.
+  - Implemented stateful job lifecycle registry (Awaiting -> Running -> Succeeded / Failed / Lost) with auto-drop of stale records.
+  - Added Tauri IPC commands: `bridge_start` (`API-BRIDGE-001`), `bridge_stop` (`API-BRIDGE-002`), `bridge_dispatch` (`API-BRIDGE-003`), `bridge_status` (`API-BRIDGE-004`).
+  - Added real-time event broadcasting: `bridge:connection_changed` and `bridge:job_event`.
+  - Implemented frontend bridge integration with `BridgeDrawer.tsx` drawer UI and `useFlowBridge` React hook.
+  - Connected with Chrome MV3 extension ZFlow Batcher (`syihab-zuhri/extencion-flow`) via `bridge_client.js`.
+  - Quality gates: 22/22 Rust tests (including bridge unit & integration tests), 18/18 Vitest suites (58 tests), 0 clippy warnings, clean typecheck and lint.
+
 - **Phase 1: Security & Credential Vault Implementation Complete [TASK-P1-001..007]:**
   - Implemented Key Derivation Function (KDF) stretching with unique 16-byte salt and SHA-256 HMAC canary verification.
   - Implemented in-memory Key Encryption Key (KEK) management with automatic zeroization on lock/drop.

@@ -27,3 +27,18 @@ if (!window.DOMRect) {
     }),
   };
 }
+
+// Mock Tauri Internals & Event listener for test environments
+const win = window as unknown as Record<string, unknown>;
+if (!win.__TAURI_INTERNALS__) {
+  win.__TAURI_INTERNALS__ = {
+    transformCallback: () => 1,
+    invoke: () => Promise.resolve(),
+  };
+}
+
+if (!win.__TAURI_EVENT_PLUGIN_INTERNALS__) {
+  win.__TAURI_EVENT_PLUGIN_INTERNALS__ = {
+    unregisterListener: () => {},
+  };
+}

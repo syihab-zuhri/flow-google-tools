@@ -218,6 +218,13 @@ Setiap kode error memiliki format terstruktur `E_{DOMAIN}_{SPECIFIC_CODE}`:
 | `E_PROJ_FILE_CORRUPTED` | 500 | No | File `.flowproj` tidak dapat diparsing (JSON invalid / schema mismatch). |
 | `E_PROJ_WRITE_DENIED` | 403 | No | Permission denied saat menulis file project atau assets di OS filesystem. |
 | `E_PROJ_NOT_FOUND` | 404 | No | File project tidak ditemukan di path yang ditentukan. |
+| **Domain: BRIDGE** | | | |
+| `E_BRIDGE_PORT_IN_USE` | 409 | Yes | Port WS bridge sudah ditempati proses lain; ganti port atau hentikan tabrakan. |
+| `E_BRIDGE_NOT_RUNNING` | 409 | Yes | `bridge_dispatch`/`bridge_stop` dipanggil sebelum `bridge_start` sukses. |
+| `E_BRIDGE_NO_CLIENT` | 503 | Yes (when connected) | Belum ada ZFlow Batcher yang tersambung & terautentikasi. |
+| `E_BRIDGE_JOB_CONFLICT` | 409 | No | `jobId` sudah ada di antran pending bridge. |
+| `E_BRIDGE_DISPATCH_FAILED` | 500 | Yes | Kanal internal ke koneksi WS mati saat write frame. |
+| `E_BRIDGE_UNAUTHORIZED` | 401 | No | Token hello tidak cocok; koneksi WS ditutup. |
 
 ---
 
@@ -1027,6 +1034,56 @@ Katalog berikut merinci 25 Tauri Commands yang terbagi ke dalam 6 grup fungsiona
 
 ---
 
+### 6.7 Grup 7: Browser Bridge Commands (`API-BRIDGE-*`) — ADR-009
+
+Jalur eksekusi alternatif pengganti TASK-P2-001 (reverse-engineered HTTP): alih-alih memanggil endpoint internal Google dari Rust (rapuh + melanggar ToS), Flow Studio menyimpan pekerjaan generate ke **ZFlow Batcher** (Chrome MV3 extension, https://github.com/syihab-zuhri/extencion-flow) yang berjalan di tab flow.google.com sesi login asli user, via WebSocket localhost ber-token.
+
+Transport: server WS bind `127.0.0.1` (default port `48210`), frame JSON teks. Handshake: extension mengirim `hello{token}` dengan token one-shot dari `bridge_start`; koneksi tanpa token valid ditutup. Hanya satu koneksi aktif (koneksi baru menggantikan yang lama).
+
+#### API-BRIDGE-001 `bridge_start`
+
+```rust
+#[tauri::command] pub fn bridge_start(port: Option<u16>) -> Result<BridgeServerInfo, IpcError>;
+```
+
+| Field | Tipe | Deskripsi |
+|---|---|---|
+| `port` | `u16?` | Port bind; `None` = default 48210. 0 = auto-assign OS. |
+| Response `BridgeServerInfo` | | `{ running, boundAddress, port, token, activeConnections, pendingJobCount }` |
+
+`token` dibagikan user ke extension lewat tab **Flow Bridge** (paste config JSON). Error: `E_BRIDGE_PORT_IN_USE`, `E_BRIDGE_ALREADY_RUNNING` (idempotent: start ulang = restart).
+
+#### API-BRIDGE-002 `bridge_stop`
+
+`bridge_stop() -> Result<BridgeServerInfo, IpcError>` — menutup listener, semua job `awaiting|running` difinalisasi `lost`, emit `bridge:connection {connected:false}`.
+
+#### API-BRIDGE-003 `bridge_dispatch`
+
+```rust
+#[tauri::command] pub fn bridge_dispatch(request: BridgeDispatchRequest) -> Result<BridgeDispatchResponse, IpcError>;
+```
+
+Request: `{ jobId (UUID unik), prompt, kind: "image"|"video", model, aspectRatio, variations, duration?, autoDownload, downloadPrefix? }`.
+Response: `{ jobId, state: "awaiting" }`. Error: `E_BRIDGE_NOT_RUNNING`, `E_BRIDGE_NO_CLIENT`, `E_BRIDGE_JOB_CONFLICT`, `E_BRIDGE_DISPATCH_FAILED`.
+Semantik: fire-and-forget; kemajuan dilaporkan via event §7.2. Extension mengeksekusi memakai mesin runner-nya sendiri (retry internal milik extension).
+
+#### API-BRIDGE-004 `bridge_status`
+
+`bridge_status() -> Result<BridgeServerInfo, IpcError>` — tanpa token (dikatoda `null` saat dibaca ulang).
+
+#### Wire protocol (informatif)
+
+| Arah | Frame | Isi |
+|---|---|---|
+| ext→app | `hello` | `{type:"hello", role:"zflow-batcher", version, token}` |
+| ext→app | `progress` | `{type:"progress", jobId, phase:"accepted"\|"typed"\|"submitted"\|"downloading", note?}` |
+| ext→app | `result` | `{type:"result", jobId, ok, error?, files:[name], assets:[url]}` |
+| app→ext | `ready` | `{type:"ready"}` setelah token lolos |
+| app→ext | `dispatch` | `{type:"dispatch", ...BridgeDispatchRequest}` |
+| app→ext | `cancel` | `{type:"cancel", jobId}` |
+
+---
+
 ## 7. Tauri Event Inventory (Real-Time Pub/Sub)
 
 Semua event dikirim dari Rust Backend ke Frontend menggunakan `app_handle.emit(event_name, payload)`. Di frontend, listener didaftarkan melalui `listen<T>(event_name, handler)`.
@@ -1167,7 +1224,38 @@ Setiap event payload wajib mengikutsertakan:
   }
   ```
 
-#### API-EVT-009: `export:progress`
+#### API-EVT-009: `bridge:connection_changed`
+- **Pemicu:** ZFlow Batcher terhubung/terautentikasi/terputus, atau lifecycle server WS berubah.
+- **TypeScript Payload:**
+  ```typescript
+  export interface BridgeConnectionChangedEvent {
+    sequenceId: number;
+    timestamp: number;
+    connected: boolean;
+    extensionVersion?: string | null;
+    boundPort: number;
+    reason: 'client_ready' | 'client_replaced' | 'client_disconnected' | 'auth_rejected' | 'server_started' | 'server_stopped';
+  }
+  ```
+
+#### API-EVT-010: `bridge:job_event`
+- **Pemicu:** Setiap frame `progress`/`result`/finalisasi `lost` dari extension untuk job yang di-dispatch via `bridge_dispatch`.
+- **TypeScript Payload:**
+  ```typescript
+  export interface BridgeJobEvent {
+    sequenceId: number;
+    timestamp: number;
+    jobId: string;
+    state: 'awaiting' | 'running' | 'succeeded' | 'failed' | 'cancelled' | 'lost';
+    phase?: 'accepted' | 'typed' | 'submitted' | 'downloading' | null;
+    note?: string | null;
+    error?: string | null;
+    files: string[];
+    assets: string[];
+  }
+  ```
+
+#### API-EVT-011: `export:progress`
 - **Pemicu:** Progress transcoding atau perakitan file concat oleh worker FFmpeg.
 - **TypeScript Payload:**
   ```typescript
@@ -1184,7 +1272,7 @@ Setiap event payload wajib mengikutsertakan:
   }
   ```
 
-#### API-EVT-010: `export:complete`
+#### API-EVT-012: `export:complete`
 - **Pemicu:** File video gabungan akhir selesai ditulis dan siap diputar.
 - **TypeScript Payload:**
   ```typescript

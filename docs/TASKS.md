@@ -182,6 +182,26 @@ Fase ini mengimplementasikan modul in-process `flow-router` untuk mengelola pool
   - Depends on: TASK-P2-006
   - Done when: Tombol "Re-authenticate" memicu jendela WebView2 sekunder terisolasi yang mengarahkan user ke halaman otentikasi Google, mendeteksi penyelesaian login, mengekstrak cookie baru, dan menyimpannya kembali ke vault terenkripsi.
 
+### Phase 2B: Browser Bridge Module (ADR-009 — menggantikan reverse-engineered HTTP P2-001..P2-005 untuk jalur eksekusi)
+
+- [x] `TASK-P2B-001` [Effort: M] Implementasi WS Bridge Server + Bridge Core State (Rust)
+  - Owner: Backend
+  - References: API-BRIDGE-001..004, API-EVT-009/010, §6.7
+  - Depends on: TASK-P0-003
+  - Done when: `flow_core::bridge` lulus unit test (handshake token, job FSM awaiting→running→succeeded/failed/lost, single-client replacement) dan `cargo test` workspace hijau.
+
+- [x] `TASK-P2B-002` [Effort: M] Implementasi Tauri Commands `bridge_*` + Event Emission + Typed Bindings
+  - Owner: Backend
+  - References: §6.7, API-EVT-009/010, NFR-004 (bind loopback only)
+  - Depends on: TASK-P2B-001
+  - Done when: `bridge_start|stop|dispatch|status` terdaftar di command_builder, `bindings.ts` ter-regen berisi tipe Bridge*, `cargo test -p flow-studio` hijau.
+
+- [x] `TASK-P2B-003` [Effort: M] Implementasi Extension WS Client (bridge.js) + Flow Studio BridgePanel UI
+  - Owner: Fullstack
+  - References: §6.7 wire protocol, API-EVT-009/010
+  - Depends on: TASK-P2B-002, extencion-flow@v1.0.0
+  - Done when: ZFlow Batcher menerima frame `dispatch` dari Flow Studio dan melaporkan `progress`/`result`; BridgePanel menampilkan status koneksi + daftar job live; `pnpm test && pnpm typecheck` hijau.
+
 ---
 
 ### Phase 3: Node Editor UI

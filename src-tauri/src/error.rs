@@ -13,6 +13,7 @@ pub enum ErrorDomain {
     Continuity,
     Export,
     Vault,
+    Bridge,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Type)]

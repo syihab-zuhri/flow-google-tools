@@ -3,6 +3,8 @@ import { CanvasWorkspace } from "./features/editor/CanvasWorkspace";
 import { useWorkspaceStatus } from "./features/workspace/use-workspace-status";
 import { MasterPasswordModal } from "./features/vault/MasterPasswordModal";
 import { useVault } from "./features/vault/use-vault";
+import { BridgeDrawer } from "./features/bridge/BridgeDrawer";
+import { useFlowBridge } from "./features/bridge/use-flow-bridge";
 import "./App.css";
 
 const appCopy = {
@@ -31,8 +33,17 @@ const workspaceStatusCopy = {
 function App() {
   const { state, reload } = useWorkspaceStatus();
   const { vaultState, setupVault, unlockVault, lockVault } = useVault();
+  const { info: bridgeInfo } = useFlowBridge();
   const [isVaultModalOpen, setIsVaultModalOpen] = useState(false);
+  const [isBridgeDrawerOpen, setIsBridgeDrawerOpen] = useState(false);
   const workspaceStatus = workspaceStatusCopy[state.kind];
+
+  const bridgeBadgeColor =
+    bridgeInfo?.running && (bridgeInfo?.activeConnections ?? 0) > 0
+      ? "bg-emerald-500 animate-pulse"
+      : bridgeInfo?.running
+      ? "bg-[#BA7517]"
+      : "bg-slate-600";
 
   const vaultBadgeColor =
     vaultState.state === "unlocked"
@@ -51,13 +62,33 @@ function App() {
           {appCopy.label}
         </span>
 
+        {/* Browser Bridge button */}
+        <button
+          type="button"
+          aria-label="Open Browser Bridge"
+          onClick={() => setIsBridgeDrawerOpen(true)}
+          title={`Browser Bridge: ${
+            !bridgeInfo?.running
+              ? "Stopped"
+              : (bridgeInfo?.activeConnections ?? 0) > 0
+              ? "Connected"
+              : "Listening"
+          }`}
+          className="mt-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg border border-[#334155] bg-[#1e293b] hover:bg-[#334155] transition-colors"
+        >
+          <span
+            aria-hidden="true"
+            className={`h-2.5 w-2.5 rounded-full ${bridgeBadgeColor}`}
+          />
+        </button>
+
         {/* Vault lock button in sidebar */}
         <button
           type="button"
           aria-label={`Open Credential Vault (${vaultState.state})`}
           onClick={() => setIsVaultModalOpen(true)}
           title={`Vault: ${vaultState.state}`}
-          className="mt-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg border border-[#334155] bg-[#1e293b] hover:bg-[#334155] transition-colors"
+          className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg border border-[#334155] bg-[#1e293b] hover:bg-[#334155] transition-colors"
         >
           <span
             aria-hidden="true"
@@ -119,6 +150,11 @@ function App() {
         onSetup={setupVault}
         onUnlock={unlockVault}
         onLock={lockVault}
+      />
+
+      <BridgeDrawer
+        isOpen={isBridgeDrawerOpen}
+        onClose={() => setIsBridgeDrawerOpen(false)}
       />
     </main>
   );
