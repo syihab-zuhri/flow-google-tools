@@ -296,31 +296,31 @@ Fase ini mengimplementasikan engine continuity visual dan naratif: isolasi subpr
 
 Fase ini mengimplementasikan penggabungan (*stitching*) berkas video antar segmen menggunakan FFmpeg concat demuxer, transcoding format output, pemutar video pratinjau dengan penanda segmen, serta dialog ekspor file.
 
-- [ ] `TASK-P5-001` [Effort: M] Implementasi FFmpeg Concat Demuxer Engine & Stream Merging
+- [x] `TASK-P5-001` [Effort: M] Implementasi FFmpeg Concat Demuxer Engine & Stream Merging
   - Owner: Backend
   - References: FR-030, API-EXP-001, PRD/VIDEO_EXPORT.md §4.4
   - Depends on: TASK-P4-001
   - Done when: Sistem menghasilkan manifest demuxer text sementara, menjalankan FFmpeg dengan mode stream-copy (`-c copy`) jika codec/timebase identik, dan menghasilkan berkas video gabungan tanpa freeze atau desinkronisasi audio pada junction point.
 
-- [ ] `TASK-P5-002` [Effort: M] Implementasi Video Transcoding Engine (MP4 H.264 & WEBM VP9 Presets)
+- [x] `TASK-P5-002` [Effort: M] Implementasi Video Transcoding Engine (MP4 H.264 & WEBM VP9 Presets)
   - Owner: Backend
   - References: FR-033, API-EXP-003, API-EXP-004, PRD/VIDEO_EXPORT.md §4.4
   - Depends on: TASK-P5-001
   - Done when: Transcoding engine mendukung ekspor video penuh maupun segmen individual ke format MP4 (H.264/AAC) dan WEBM (VP9/Opus) dengan pilihan resolusi Original, 1080p, dan 720p sesuai target preset.
 
-- [ ] `TASK-P5-003` [Effort: S] Implementasi Fast Preview Stream Generator
+- [x] `TASK-P5-003` [Effort: S] Implementasi Fast Preview Stream Generator
   - Owner: Backend
   - References: FR-031, API-EXP-002, PRD/VIDEO_EXPORT.md
   - Depends on: TASK-P5-001
   - Done when: Command `preview_export` menghasilkan file pratinjau teroptimasi secara cepat ke folder cache lokal, memungkinkan pemutaran instan pada UI sebelum proses ekspor final dijalankan.
 
-- [ ] `TASK-P5-004` [Effort: M] Implementasi Full Video Preview Player Component dengan Segment Marker Overlay
+- [x] `TASK-P5-004` [Effort: M] Implementasi Full Video Preview Player Component dengan Segment Marker Overlay
   - Owner: Frontend
   - References: FR-031, DESIGN.md §7, PRD/VIDEO_EXPORT.md
   - Depends on: TASK-P5-003
   - Done when: Komponen pemutar video preview menampilkan media gabungan dengan kontrol play/pause, timecode, seekbar interaktif dengan pin visual penanda sambungan segmen (*segment markers*) yang dapat diklik untuk seek langsung ke batas segmen.
 
-- [ ] `TASK-P5-005` [Effort: M] Implementasi Video Export Modal & Progress Monitor UI Component
+- [x] `TASK-P5-005` [Effort: M] Implementasi Video Export Modal & Progress Monitor UI Component
   - Owner: Frontend
   - References: FR-030, FR-032, FR-033, DSD.md CMP-EXPORT-PROGRESS-BAR, DESIGN.md §7
   - Depends on: TASK-P0-003, TASK-P5-002, TASK-P5-004

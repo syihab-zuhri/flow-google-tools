@@ -47,6 +47,22 @@ export const commands = {
     typedError<StyleLockResponse, IpcError>(
       __TAURI_INVOKE("set_style_lock", { projectId, styleLockText }),
     ),
+  concatSegments: (request: ConcatSegmentsRequest) =>
+    typedError<ExportVideoResponse, IpcError>(
+      __TAURI_INVOKE("concat_segments", { request }),
+    ),
+  previewExport: (projectId: string, segmentPaths: string[]) =>
+    typedError<PreviewExportResponse, IpcError>(
+      __TAURI_INVOKE("preview_export", { projectId, segmentPaths }),
+    ),
+  exportVideo: (request: ExportVideoRequest) =>
+    typedError<ExportVideoResponse, IpcError>(
+      __TAURI_INVOKE("export_video", { request }),
+    ),
+  exportSegment: (request: ExportSegmentRequest) =>
+    typedError<ExportSegmentResponse, IpcError>(
+      __TAURI_INVOKE("export_segment", { request }),
+    ),
 };
 
 /* Types */
@@ -58,7 +74,47 @@ export type ComposedPromptResponse = {
   isTruncated: boolean;
 };
 
-export type ErrorDomain = "STORAGE" | "PROJECT" | "CONTINUITY";
+export type ConcatSegmentsRequest = {
+  clientRequestId: string;
+  projectId: string;
+  segmentPaths: string[];
+  outputPath: string;
+  format: OutputFormat;
+  resolution: ResolutionPreset;
+};
+
+export type ErrorDomain = "STORAGE" | "PROJECT" | "CONTINUITY" | "EXPORT";
+
+export type ExportSegmentRequest = {
+  segmentId: string;
+  sourceVideoPath: string;
+  targetPath: string;
+  format: OutputFormat;
+  resolution: ResolutionPreset;
+};
+
+export type ExportSegmentResponse = {
+  exportedPath: string;
+  fileSizeBytes: number;
+};
+
+export type ExportVideoRequest = {
+  clientRequestId: string;
+  projectId: string;
+  format: OutputFormat;
+  resolution: ResolutionPreset;
+  videoBitrateKbps: number | null;
+  audioBitrateKbps: number | null;
+  outputDirectory: string;
+  customFilename: string | null;
+};
+
+export type ExportVideoResponse = {
+  success: boolean;
+  outputPath: string;
+  durationSeconds: number | null;
+  fileSizeBytes: number;
+};
 
 export type ExtractFrameRequest = {
   videoPath: string;
@@ -100,6 +156,14 @@ export type NodePosition = {
   y: number | null;
 };
 
+export type OutputFormat = "mp4" | "webm";
+
+export type PreviewExportResponse = {
+  previewFilePath: string;
+  segmentMarkers: (number | null)[];
+  totalDurationSeconds: number | null;
+};
+
 export type ProjectEdge = {
   id: string;
   source: string;
@@ -134,6 +198,8 @@ export type PromptContextRequest = {
 };
 
 export type ProviderMode = "manual_handoff" | "official_api";
+
+export type ResolutionPreset = "original" | "1080p" | "720p";
 
 export type SaveProjectRequest = {
   filePath: string;

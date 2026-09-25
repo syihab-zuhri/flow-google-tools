@@ -1,5 +1,6 @@
 mod continuity;
 pub mod error;
+mod export;
 pub mod logging;
 mod project;
 mod workspace;
@@ -36,6 +37,10 @@ fn command_builder() -> Builder<tauri::Wry> {
             continuity::extract_frame,
             continuity::get_prompt_context,
             continuity::set_style_lock,
+            export::concat_segments,
+            export::preview_export,
+            export::export_video,
+            export::export_segment,
         ])
 }
 

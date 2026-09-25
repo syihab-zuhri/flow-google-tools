@@ -1,5 +1,7 @@
 import {
   Clapperboard,
+  Download,
+  Eye,
   Film,
   Image as ImageIcon,
   Loader2,
@@ -14,11 +16,15 @@ import { useFlowGraphStore } from "./flow-graph-store";
 export interface CanvasToolbarProps {
   onRunPipeline?: () => void;
   isRunning?: boolean;
+  onOpenPreview?: () => void;
+  onOpenExport?: () => void;
 }
 
 export function CanvasToolbar({
   onRunPipeline,
   isRunning = false,
+  onOpenPreview,
+  onOpenExport,
 }: CanvasToolbarProps) {
   const nodes = useFlowGraphStore((state) => state.nodes);
   const edges = useFlowGraphStore((state) => state.edges);
@@ -113,6 +119,32 @@ export function CanvasToolbar({
               <Play className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
             )}
             Run Pipeline
+          </button>
+        ) : null}
+
+        {onOpenPreview ? (
+          <button
+            type="button"
+            aria-label="Preview Full Video"
+            onClick={onOpenPreview}
+            disabled={nodes.length === 0}
+            className="flex h-[34px] items-center gap-1.5 rounded-md border border-[#185FA5] bg-[#0C2D5C] px-3 text-xs font-semibold text-blue-100 hover:bg-[#185FA5] hover:text-white disabled:opacity-50 transition-colors"
+          >
+            <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+            Preview
+          </button>
+        ) : null}
+
+        {onOpenExport ? (
+          <button
+            type="button"
+            aria-label="Export Video Modal"
+            onClick={onOpenExport}
+            disabled={nodes.length === 0}
+            className="flex h-[34px] items-center gap-1.5 rounded-md border border-[#334155] bg-[#1e293b] px-3 text-xs font-semibold text-slate-200 hover:bg-[#334155] hover:text-white disabled:opacity-50 transition-colors"
+          >
+            <Download className="h-3.5 w-3.5" aria-hidden="true" />
+            Export
           </button>
         ) : null}
       </div>

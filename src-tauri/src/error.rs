@@ -11,6 +11,7 @@ pub enum ErrorDomain {
     Storage,
     Project,
     Continuity,
+    Export,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Type)]
@@ -63,6 +64,17 @@ impl IpcError {
             code: code.to_owned(),
             message: detail.to_owned(),
             domain: ErrorDomain::Continuity,
+            details: BTreeMap::new(),
+            timestamp: unix_timestamp_millis(),
+            retryable: false,
+        }
+    }
+
+    pub fn export_failed(detail: &str) -> Self {
+        Self {
+            code: "E_EXPORT_FAILED".to_owned(),
+            message: format!("Video export failed: {detail}"),
+            domain: ErrorDomain::Export,
             details: BTreeMap::new(),
             timestamp: unix_timestamp_millis(),
             retryable: false,

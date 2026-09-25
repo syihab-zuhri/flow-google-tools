@@ -22,6 +22,16 @@ Dokumen `CHANGELOG.md` berfungsi sebagai catatan historis komprehensif, log audi
 ## [Unreleased]
 
 ### Added
+- **Phase 5: Video Export & Preview Implementation Complete [TASK-P5-001..005]:**
+  - Implemented FFmpeg Concat Demuxer Engine with temporary text manifest and stream-copy (`-c copy`) for seamless audio/video joining.
+  - Implemented Video Transcoding Engine with MP4 H.264 / AAC and WebM VP9 / Opus presets across Original, 1080p, and 720p scaling filters.
+  - Implemented Fast Preview Stream Generator with per-segment duration markers.
+  - Added Tauri IPC commands: `concat_segments` (`API-EXP-001`), `preview_export` (`API-EXP-002`), `export_video` (`API-EXP-003`), `export_segment` (`API-EXP-004`).
+  - Implemented Full Video Preview Player component (`VideoPreviewModal`) with interactive seekbar, timestamp segment marker buttons, and timecode display.
+  - Implemented Video Export Modal component (`VideoExportModal`) with format, resolution, filename, folder inputs, and progress monitor.
+  - Created Storybook CSF3 stories and unit test suites for all export components and hooks.
+  - Quality gates: 18/18 Rust tests, 15/15 Vitest suites (50 tests), 0 clippy warnings, and 100/100 Healthy score on `aislop scan`.
+
 - **Phase 4: Continuity Engine & FFmpeg Integration Complete [TASK-P4-001..007]:**
   - Integrated FFmpeg runner for fast last-frame extraction (`-sseof -1 -update 1 -q:v 1`) with sanitized arguments.
   - Implemented Prompt Context Carry-Over sliding window (up to 3 ancestor prompts) and persistent Visual Style Lock manager.
