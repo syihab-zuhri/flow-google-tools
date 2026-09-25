@@ -8,10 +8,37 @@ export const commands = {
     typedError<WorkspaceStatusResponse, IpcError>(
       __TAURI_INVOKE("workspace_status"),
     ),
+  saveProject: (request: SaveProjectRequest) =>
+    typedError<SaveProjectResponse, IpcError>(
+      __TAURI_INVOKE("save_project", {
+        request: {
+          ...request,
+          graph: { ...request.graph, nodes: request.graph.nodes.map((i) => i) },
+        },
+      }),
+    ),
+  loadProject: (filePath: string) =>
+    typedError<LoadProjectResponse, IpcError>(
+      __TAURI_INVOKE("load_project", { filePath }),
+    ).then(
+      (v) =>
+        (v.status === "ok"
+          ? {
+              ...v,
+              data: {
+                ...v.data,
+                graph: {
+                  ...v.data.graph,
+                  nodes: v.data.graph.nodes.map((i) => i),
+                },
+              },
+            }
+          : v) as typeof v,
+    ),
 };
 
 /* Types */
-export type ErrorDomain = "STORAGE";
+export type ErrorDomain = "STORAGE" | "PROJECT";
 
 export type IpcError = {
   code: string;
@@ -22,7 +49,67 @@ export type IpcError = {
   retryable: boolean;
 };
 
+export type LoadProjectResponse = {
+  projectName: string;
+  version: string;
+  settings: ProjectSettings;
+  graph: ProjectGraphData;
+  assets: string[];
+  updatedAt: string;
+};
+
+export type NodePosition = {
+  x: number | null;
+  y: number | null;
+};
+
+export type ProjectEdge = {
+  id: string;
+  source: string;
+  target: string;
+  sourceHandle: string | null;
+  targetHandle: string | null;
+};
+
+export type ProjectGraphData = {
+  nodes: ProjectNode[];
+  edges: ProjectEdge[];
+  viewport: ViewportData;
+};
+
+export type ProjectNode = {
+  id: string;
+  type: string;
+  position: NodePosition;
+  data: any;
+};
+
+export type ProjectSettings = {
+  defaultModel: string;
+  autoSaveIntervalSeconds: number;
+  styleLockText: string | null;
+};
+
 export type ProviderMode = "manual_handoff" | "official_api";
+
+export type SaveProjectRequest = {
+  filePath: string;
+  projectName: string;
+  settings: ProjectSettings;
+  graph: ProjectGraphData;
+};
+
+export type SaveProjectResponse = {
+  savedPath: string;
+  savedAt: string;
+  fileSizeBytes: number;
+};
+
+export type ViewportData = {
+  x: number | null;
+  y: number | null;
+  zoom: number | null;
+};
 
 export type WorkspaceStatusResponse = {
   databasePath: string;

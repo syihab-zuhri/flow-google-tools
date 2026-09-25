@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@xyflow/react/dist/style.css";
 
 :root {
   color: #f1f5f9;
@@ -44,7 +45,7 @@ button:focus-visible {
 
 .app-shell {
   display: grid;
-  grid-template-columns: minmax(248px, 0.31fr) minmax(0, 1fr);
+  grid-template-columns: 64px minmax(0, 1fr);
   min-height: 100dvh;
   background: #0f172a;
 }
@@ -52,22 +53,23 @@ button:focus-visible {
 .app-identity {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 32px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
   border-right: 1px solid #334155;
   background: #0b0f19;
 }
 
 .app-identity__mark {
   display: grid;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   place-items: center;
-  border: 1px solid #2563eb;
-  border-radius: 12px;
+  border: 1px solid #185fa5;
+  border-radius: 10px;
   color: #dbeafe;
-  background: #172554;
-  font-size: 0.875rem;
+  background: #0c2d5c;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
 }
@@ -91,11 +93,52 @@ button:focus-visible {
   line-height: 1.4;
 }
 
+.app-identity__status {
+  margin-top: auto;
+  margin-bottom: 8px;
+}
+
+.app-identity__dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.app-identity__dot--loading {
+  background: #ba7517;
+  animation: workspace-pulse 1.2s ease-in-out infinite;
+}
+
+.app-identity__dot--error {
+  background: #ef4444;
+}
+
+.app-identity__dot--ready {
+  background: #22c55e;
+}
+
+@keyframes workspace-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
 .app-identity__security {
   margin: auto 0 0;
   color: #94a3b8;
   font-size: 0.875rem;
   line-height: 1.5;
+}
+
+.app-canvas {
+  display: grid;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .app-workspace {

@@ -1,5 +1,6 @@
 pub mod error;
 pub mod logging;
+mod project;
 mod workspace;
 
 use specta_typescript::Typescript;
@@ -20,9 +21,18 @@ const TYPED_ERROR_IMPL: &str = r#"async function typedError<T, E>(result: Promis
 }"#;
 
 fn command_builder() -> Builder<tauri::Wry> {
+    let semantic_types = specta_typescript::semantic::Configuration::default()
+        .define::<serde_json::Value>(|_| specta_typescript::define("any").into(), None, None);
+
     Builder::new()
         .typed_error_impl(TYPED_ERROR_IMPL)
-        .commands(collect_commands![workspace::workspace_status])
+        .dangerously_cast_bigints_to_number()
+        .semantic_types(semantic_types)
+        .commands(collect_commands![
+            workspace::workspace_status,
+            project::save_project,
+            project::load_project,
+        ])
 }
 
 pub fn export_bindings() -> io::Result<()> {

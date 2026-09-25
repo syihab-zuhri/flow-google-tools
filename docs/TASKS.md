@@ -188,55 +188,55 @@ Fase ini mengimplementasikan modul in-process `flow-router` untuk mengelola pool
 
 Fase ini membangun kanvas grafik node visual interaktif berbasis `@xyflow/react` v12+, sistem node kustom, validasi penarikan edge yang ketat, deteksi siklus DAG, serta serialisasi proyek `.flowproj`.
 
-- [ ] `TASK-P3-001` [Effort: M] Setup @xyflow/react Canvas Workspace dengan Custom Themes & Pan/Zoom
+- [x] `TASK-P3-001` [Effort: M] Setup @xyflow/react Canvas Workspace dengan Custom Themes & Pan/Zoom
   - Owner: Frontend
   - References: FR-010, NFR-001, DESIGN.md §2.1
   - Depends on: TASK-P0-001
   - Done when: Kanvas node terkonfigurasi dengan background ultra-dark `#0B0F19`, dot grid, performa rendering stabil pada 60fps (P95 frame time < 16.67ms) saat pan/zoom 100 node pada hardware target, serta widget MiniMap berfungsi akurat.
 
-- [ ] `TASK-P3-002` [Effort: M] Implementasi Zustand Flow Graph Store & History Manager (Undo/Redo)
+- [x] `TASK-P3-002` [Effort: M] Implementasi Zustand Flow Graph Store & History Manager (Undo/Redo)
   - Owner: Frontend
   - References: FR-010, FR-015, PRD/NODE_EDITOR.md §4.2
   - Depends on: TASK-P3-001
   - Done when: Zustand store mengelola state nodes, edges, multi-selection (Shift+click atau box select), mutasi posisi, riwayat undo/redo (Ctrl+Z / Ctrl+Y) hingga 50 langkah, dan batch deletion (tombol Delete) yang membersihkan node beserta edge terkait.
 
-- [ ] `TASK-P3-003` [Effort: M] Implementasi PromptNode Component dengan Template Variable Resolver
+- [x] `TASK-P3-003` [Effort: M] Implementasi PromptNode Component dengan Template Variable Resolver
   - Owner: Frontend
   - References: FR-011, DSD.md CMP-PROMPT-NODE, DESIGN.md §5.2
   - Depends on: TASK-P3-002
   - Done when: Komponen `PromptNode` me-render textarea multi-line auto-resize, badge penghitung karakter, visual token highlight untuk template variables `{segment_number}` dan `{previous_context}`, port handle output text, dan border glow ungu (`#8B5CF6`).
 
-- [ ] `TASK-P3-004` [Effort: M] Implementasi ImageNode (Reference) Component dengan Asset Dropzone
+- [x] `TASK-P3-004` [Effort: M] Implementasi ImageNode (Reference) Component dengan Asset Dropzone
   - Owner: Frontend
   - References: FR-012, DSD.md, DESIGN.md §5.2
   - Depends on: TASK-P3-002
   - Done when: Komponen `ImageNode` mendukung drag-and-drop file gambar (PNG, JPG, WEBP), native Windows file picker, preview thumbnail beresolusi terkelola, port handle output image, penolakan file non-image dengan visual alert, dan border glow cyan (`#06B6D4`).
 
-- [ ] `TASK-P3-005` [Effort: M] Implementasi VideoNode (Clip / Preview) Component
+- [x] `TASK-P3-005` [Effort: M] Implementasi VideoNode (Clip / Preview) Component
   - Owner: Frontend
   - References: FR-013, FR-017, DSD.md, DESIGN.md §5.2
   - Depends on: TASK-P3-002
   - Done when: Komponen `VideoNode` mendukung import file MP4/WEBM, rendering thumbnail frame pertama, embedded mini player dengan kontrol play/pause/seekbar, opsi klik kanan "Open in system player", dan border glow amber (`#F59E0B`).
 
-- [ ] `TASK-P3-006` [Effort: M] Implementasi GenerationNode Component & Parameter Settings Panel
+- [x] `TASK-P3-006` [Effort: M] Implementasi GenerationNode Component & Parameter Settings Panel
   - Owner: Frontend
   - References: FR-016, PRD/NODE_EDITOR.md, DESIGN.md §5.2
   - Depends on: TASK-P3-002
   - Done when: Komponen `GenerationNode` memiliki port input (Prompt, Reference Image, Context Video), dropdown pemilihan model (Gemini Omni, Veo 3.1, Nano Banana), input aspect ratio, seed number input, status execution pill, dan border glow biru (`#3B82F6`).
 
-- [ ] `TASK-P3-007` [Effort: M] Implementasi Draggable Edge Routing & Strict Port Type Validation
+- [x] `TASK-P3-007` [Effort: M] Implementasi Draggable Edge Routing & Strict Port Type Validation
   - Owner: Frontend
   - References: FR-014, PRD/NODE_EDITOR.md §4.2
   - Depends on: TASK-P3-003, TASK-P3-004, TASK-P3-005, TASK-P3-006
   - Done when: Custom edge me-render path bezier halus dengan konektor type-safe; penarikan edge yang tidak kompatibel (misal: port teks ke port gambar) ditolak secara visual dengan animasi snap-back instan dan toast error.
 
-- [ ] `TASK-P3-008` [Effort: M] Implementasi Directed Acyclic Graph (DAG) Topology Validator & Cycle Detector
+- [x] `TASK-P3-008` [Effort: M] Implementasi Directed Acyclic Graph (DAG) Topology Validator & Cycle Detector
   - Owner: Frontend
   - References: FR-014, FR-024, PRD/NODE_EDITOR.md
   - Depends on: TASK-P3-007
   - Done when: Modul validasi topological sort (Kahn's algorithm) mendeteksi siklus dependensi secara real-time pada canvas, memberi tanda visual merah pada edge penyebab siklus, dan menghitung sekuens urutan eksekusi segmen video tanpa deadlocks.
 
-- [ ] `TASK-P3-009` [Effort: M] Implementasi Project Persistence Engine (.flowproj File Format)
+- [x] `TASK-P3-009` [Effort: M] Implementasi Project Persistence Engine (.flowproj File Format)
   - Owner: Tech Lead
   - References: FR-018, NFR-006, API-PROJ-001, API-PROJ-002, API-PROJ-003, API-PROJ-004
   - Depends on: TASK-P0-003, TASK-P3-002

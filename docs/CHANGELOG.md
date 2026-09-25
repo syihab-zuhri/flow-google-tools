@@ -22,6 +22,20 @@ Dokumen `CHANGELOG.md` berfungsi sebagai catatan historis komprehensif, log audi
 ## [Unreleased]
 
 ### Added
+- **Phase 3: Visual Canvas Node Editor Implementation Complete [TASK-P3-001..009]:**
+  - Integrated `@xyflow/react` v12 with ultra-dark canvas `#0B0F19`, dot grid, MiniMap, Controls, and 60fps pan/zoom performance.
+  - Implemented Zustand Flow Graph Store (`flow-graph-store.ts`) with up to 50 undo/redo history snapshots, multi-node selection, and dirty state management.
+  - Implemented 4 custom node components with full visual states and Storybook stories:
+    - `PromptNode`: multi-line input, template variable highlighting (`{segment_number}`, `{previous_context}`), character count, and purple glow `#8B5CF6`.
+    - `ImageNode`: reference asset upload/preview dropzone, resolution metadata, and emerald glow `#10B981`.
+    - `VideoNode`: video clip preview/player, format validation, duration/resolution metadata, and violet glow `#8B5CF6`.
+    - `GenerationNode`: provider model selector, aspect ratio, seed, status badge, action controls, and amber glow `#F59E0B`.
+  - Implemented DAG Topology Validator & Cycle Detector (`dag-validator.ts`) with strict port-type connection rules and Kahn's algorithm topological sorting.
+  - Implemented Project Persistence Engine (.flowproj) with atomic write/sync/rename and 10MB limit in `flow-core::project` and Tauri IPC commands (`save_project`, `load_project`).
+  - Added React hook `useProjectPersistence` with Ctrl+S/Ctrl+O keyboard shortcuts.
+  - Rewired `App.tsx` to display minimal 64px identity sidebar and full-canvas workspace.
+  - Achieved 100/100 Healthy score on `aislop scan`, 10/10 test files (39 tests) passing on Vitest with 75% coverage, and 12/12 Rust tests passing.
+
 - **Phase 0 Implementation Complete:**
   - Tauri 2.x desktop shell configured with Vite 8 + React 19 + TypeScript + Tailwind CSS.
   - Rust workspace modular structure (`crates/flow-core` and `src-tauri`).

@@ -9,6 +9,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ErrorDomain {
     Storage,
+    Project,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Type)]
@@ -28,6 +29,28 @@ impl IpcError {
             code: "E_STORAGE_WORKSPACE_INITIALIZATION_FAILED".to_owned(),
             message: "The local workspace could not be initialized.".to_owned(),
             domain: ErrorDomain::Storage,
+            details: BTreeMap::new(),
+            timestamp: unix_timestamp_millis(),
+            retryable: true,
+        }
+    }
+
+    pub fn project_save_failed(detail: &str) -> Self {
+        Self {
+            code: "E_PROJECT_SAVE_FAILED".to_owned(),
+            message: format!("Failed to save project: {detail}"),
+            domain: ErrorDomain::Project,
+            details: BTreeMap::new(),
+            timestamp: unix_timestamp_millis(),
+            retryable: false,
+        }
+    }
+
+    pub fn project_load_failed(detail: &str) -> Self {
+        Self {
+            code: "E_PROJECT_LOAD_FAILED".to_owned(),
+            message: format!("Failed to load project: {detail}"),
+            domain: ErrorDomain::Project,
             details: BTreeMap::new(),
             timestamp: unix_timestamp_millis(),
             retryable: true,
