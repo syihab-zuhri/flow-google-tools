@@ -332,19 +332,19 @@ Fase ini mengimplementasikan penggabungan (*stitching*) berkas video antar segme
 
 Fase ini menegakkan verifikasi menyeluruh terhadap aksesibilitas antarmuka (WCAG 2.2 AA), dokumentasi visual komponen (Storybook CSF3), pengujian integrasi Rust backend, serta skenario end-to-end smoke testing.
 
-- [ ] `TASK-P6-001` [Effort: M] Konfigurasi Storybook 8 Environment & CSF3 Stories Baseline
+- [x] `TASK-P6-001` [Effort: M] Konfigurasi Storybook 8 Environment & CSF3 Stories Baseline
   - Owner: Frontend
   - References: DSD.md §C, CODE_QUALITY.md §7.1
   - Depends on: TASK-P0-002, TASK-P3-003, TASK-P2-006, TASK-P1-006
   - Done when: Storybook 8 berjalan terisolasi dengan Vite dan Tailwind CSS; berkas CSF3 stories untuk `PromptNode`, `CreditBar`, `VaultUnlockScreen`, dan `ExportProgressBar` mengekspor seluruh 6 visual mandatory states (Default, Disabled, Loading, Error, Empty, Compact).
 
-- [ ] `TASK-P6-002` [Effort: M] Implementasi Automated Accessibility Test Suite dengan axe-core CI Error Mode
+- [x] `TASK-P6-002` [Effort: M] Implementasi Automated Accessibility Test Suite dengan axe-core CI Error Mode
   - Owner: Frontend
   - References: NFR-009, DSD.md §D, CODE_QUALITY.md §7.1
   - Depends on: TASK-P6-001
   - Done when: Paket `@storybook/addon-a11y` dan `@axe-core/playwright` berjalan dalam mode `a11y: { test: 'error' }` pada pipeline CI, mendeteksi zero violations untuk standar WCAG 2.2 AA pada kontras teks (≥ 4.5:1), keyboard focus navigation, dan atribut ARIA.
 
-- [ ] `TASK-P6-003` [Effort: M] Implementasi Backend Rust Unit & Integration Test Suite
+- [x] `TASK-P6-003` [Effort: M] Implementasi Backend Rust Unit & Integration Test Suite
   - Owner: Backend
   - References: NFR-003, NFR-004, CODE_QUALITY.md §7.1
   - Depends on: TASK-P1-003, TASK-P2-005, TASK-P4-006, TASK-P5-001
@@ -356,7 +356,7 @@ Fase ini menegakkan verifikasi menyeluruh terhadap aksesibilitas antarmuka (WCAG
   - Depends on: TASK-P1-006, TASK-P2-006, TASK-P3-009, TASK-P5-005
   - Done when: Skenario Playwright menguji siklus lengkap aplikasi secara headless: set master password, buat node prompt + image, koneksi edge canvas, simpan proyek `.flowproj`, pemicuan eksekusi pipeline simulasi, dan ekspor video tanpa uncaught exception.
 
-- [ ] `TASK-P6-005` [Effort: S] Audit Keamanan & Hardening Linting Anti-AI-Slop
+- [x] `TASK-P6-005` [Effort: S] Audit Keamanan & Hardening Linting Anti-AI-Slop
   - Owner: Tech Lead
   - References: NFR-010, CODE_QUALITY.md §3, CODE_QUALITY.md §5
   - Depends on: TASK-P0-002, TASK-P6-003
