@@ -107,21 +107,38 @@ export const BridgeDrawer: React.FC<BridgeDrawerProps> = ({ isOpen, onClose }) =
           </div>
 
           {/* Pairing token */}
-          {isRunning && info?.token && (
+          {isRunning && (
             <div className="rounded-lg border border-[#334155] bg-[#1e293b]/50 p-3 space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-300">Pairing Token (ws://127.0.0.1:{info.port})</span>
-                <button
-                  type="button"
-                  onClick={handleCopyToken}
-                  className="text-xs font-semibold text-[#BA7517] hover:underline"
-                >
-                  {copied ? "Copied! ✓" : "Copy Token"}
-                </button>
+                <span className="text-xs font-medium text-slate-300">
+                  Pairing Token (ws://127.0.0.1:{info?.port ?? 48210})
+                </span>
+                {info?.token && (
+                  <button
+                    type="button"
+                    onClick={handleCopyToken}
+                    className="text-xs font-semibold text-[#BA7517] hover:underline"
+                  >
+                    {copied ? "Copied! ✓" : "Copy Token"}
+                  </button>
+                )}
               </div>
-              <p className="font-mono text-xs text-slate-400 break-all select-all bg-[#0f172a] p-2 rounded border border-[#334155]">
-                {info.token}
-              </p>
+              {info?.token ? (
+                <p className="font-mono text-xs text-slate-200 break-all select-all bg-[#0f172a] p-2 rounded border border-[#334155]">
+                  {info.token}
+                </p>
+              ) : (
+                <div className="flex items-center justify-between py-1">
+                  <span className="text-xs text-amber-400">Token belum dimuat</span>
+                  <button
+                    type="button"
+                    onClick={() => startBridge()}
+                    className="rounded bg-[#185FA5] px-2.5 py-1 text-xs text-white hover:bg-blue-600 transition-colors"
+                  >
+                    Generate Token
+                  </button>
+                </div>
+              )}
               <p className="text-[11px] text-slate-400">
                 Paste token ini ke tab <b>Bridge</b> pada ekstensi ZFlow Batcher di browser Chrome.
               </p>

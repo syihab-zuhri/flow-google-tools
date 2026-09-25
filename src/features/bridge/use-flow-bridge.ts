@@ -44,7 +44,10 @@ export function useFlowBridge() {
     try {
       const res = await commands.bridgeStatus();
       if (res.status === "ok") {
-        setInfo(res.data);
+        setInfo((prev) => ({
+          ...res.data,
+          token: res.data.token ?? prev?.token ?? null,
+        }));
       }
     } catch {
       // ignore status refresh errors on initial load
@@ -132,7 +135,10 @@ export function useFlowBridge() {
 
     void commands.bridgeStatus().then((res) => {
       if (active && res.status === "ok") {
-        setInfo(res.data);
+        setInfo((prev) => ({
+          ...res.data,
+          token: res.data.token ?? prev?.token ?? null,
+        }));
       }
     }).catch(() => {
       // ignore

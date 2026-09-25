@@ -716,7 +716,7 @@ pub fn bridge_dispatch(
 #[specta::specta]
 pub fn bridge_status(runtime: State<'_, BridgeRuntime>) -> Result<BridgeServerInfo, IpcError> {
     let guard = runtime.shared.lock().expect("bridge state poisoned");
-    Ok(snapshot_info(&guard, false))
+    Ok(snapshot_info(&guard, true))
 }
 
 pub fn manage(app: &AppHandle) {
