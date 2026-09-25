@@ -5,10 +5,15 @@ description = "Local-first long-form AI video workflow studio"
 authors = ["Zuhri"]
 edition = "2021"
 rust-version = "1.93"
+default-run = "flow-studio"
 
 [lib]
 name = "flow_studio_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "flow-studio"
+path = "src/main.rs"
 
 [[bin]]
 name = "export-bindings"
