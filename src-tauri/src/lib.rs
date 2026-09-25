@@ -1,3 +1,4 @@
+mod continuity;
 pub mod error;
 pub mod logging;
 mod project;
@@ -32,6 +33,9 @@ fn command_builder() -> Builder<tauri::Wry> {
             workspace::workspace_status,
             project::save_project,
             project::load_project,
+            continuity::extract_frame,
+            continuity::get_prompt_context,
+            continuity::set_style_lock,
         ])
 }
 

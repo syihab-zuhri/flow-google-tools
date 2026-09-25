@@ -8,6 +8,7 @@ import {
 } from "@xyflow/react";
 import { useCallback, useEffect, useState } from "react";
 import { CanvasToolbar } from "./CanvasToolbar";
+import { useContinuityPipeline } from "./use-continuity-pipeline";
 import { useFlowGraphStore, type FlowCustomNode } from "./flow-graph-store";
 import { flowNodeTypes } from "./nodes";
 
@@ -20,6 +21,7 @@ function CanvasWorkspaceInner() {
   const undo = useFlowGraphStore((state) => state.undo);
   const redo = useFlowGraphStore((state) => state.redo);
 
+  const { pipelineState, runPipeline } = useContinuityPipeline();
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
   const handleConnect = useCallback(
@@ -74,9 +76,21 @@ function CanvasWorkspaceInner() {
 
   return (
     <div className="flex h-full w-full flex-col bg-[#0b0f19]">
-      <CanvasToolbar />
+      <CanvasToolbar
+        onRunPipeline={runPipeline}
+        isRunning={pipelineState.isRunning}
+      />
 
       <div className="relative flex-1">
+        {pipelineState.error && (
+          <div
+            role="alert"
+            className="absolute top-4 left-1/2 -translate-x-1/2 z-50 rounded-lg border border-red-500/60 bg-[#450a0a]/90 px-4 py-2 text-xs font-semibold text-red-200 shadow-xl backdrop-blur transition-all"
+          >
+            {pipelineState.error}
+          </div>
+        )}
+
         {connectionError && (
           <div
             role="alert"

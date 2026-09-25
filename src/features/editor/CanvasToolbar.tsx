@@ -2,14 +2,24 @@ import {
   Clapperboard,
   Film,
   Image as ImageIcon,
+  Loader2,
   MessageSquare,
+  Play,
   Redo2,
   Trash2,
   Undo2,
 } from "lucide-react";
 import { useFlowGraphStore } from "./flow-graph-store";
 
-export function CanvasToolbar() {
+export interface CanvasToolbarProps {
+  onRunPipeline?: () => void;
+  isRunning?: boolean;
+}
+
+export function CanvasToolbar({
+  onRunPipeline,
+  isRunning = false,
+}: CanvasToolbarProps) {
   const nodes = useFlowGraphStore((state) => state.nodes);
   const edges = useFlowGraphStore((state) => state.edges);
   const historyPast = useFlowGraphStore((state) => state.historyPast);
@@ -85,6 +95,26 @@ export function CanvasToolbar() {
           <Clapperboard className="h-3.5 w-3.5" aria-hidden="true" />
           Generate
         </button>
+
+        {onRunPipeline ? (
+          <button
+            type="button"
+            aria-label="Run Sequence Pipeline"
+            onClick={onRunPipeline}
+            disabled={isRunning || nodes.length === 0}
+            className="flex h-[34px] items-center gap-1.5 rounded-md border border-[#BA7517] bg-[#BA7517] px-3 text-xs font-bold text-white shadow hover:bg-[#d97706] disabled:opacity-50 transition-colors"
+          >
+            {isRunning ? (
+              <Loader2
+                className="h-3.5 w-3.5 animate-spin"
+                aria-hidden="true"
+              />
+            ) : (
+              <Play className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
+            )}
+            Run Pipeline
+          </button>
+        ) : null}
       </div>
 
       {/* History & Graph Controls */}

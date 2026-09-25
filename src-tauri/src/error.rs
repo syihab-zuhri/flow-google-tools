@@ -10,6 +10,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 pub enum ErrorDomain {
     Storage,
     Project,
+    Continuity,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Type)]
@@ -54,6 +55,17 @@ impl IpcError {
             details: BTreeMap::new(),
             timestamp: unix_timestamp_millis(),
             retryable: true,
+        }
+    }
+
+    pub fn continuity_failed(code: &str, detail: &str) -> Self {
+        Self {
+            code: code.to_owned(),
+            message: detail.to_owned(),
+            domain: ErrorDomain::Continuity,
+            details: BTreeMap::new(),
+            timestamp: unix_timestamp_millis(),
+            retryable: false,
         }
     }
 }

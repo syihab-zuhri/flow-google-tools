@@ -248,43 +248,43 @@ Fase ini membangun kanvas grafik node visual interaktif berbasis `@xyflow/react`
 
 Fase ini mengimplementasikan engine continuity visual dan naratif: isolasi subproses FFmpeg, ekstraksi last-frame resolusi penuh, injeksi otomatis ke prompt segmen berikutnya, sliding context window, dan orkestrasi sekuensial pipeline.
 
-- [ ] `TASK-P4-001` [Effort: M] Implementasi FFmpeg Sidecar Subprocess Runner & Sandboxing
+- [x] `TASK-P4-001` [Effort: M] Implementasi FFmpeg Sidecar Subprocess Runner & Sandboxing
   - Owner: Backend
   - References: FR-020, ARCHITECTURE.md §1.2, ADR-001
   - Depends on: TASK-P0-001
   - Done when: Modul `ffmpeg::runner` mengeksekusi biner FFmpeg Windows x64 langsung tanpa invoking shell (`cmd.exe`/PowerShell), membatasi argumen pada format whitelist aman, dan membatasi izin akses file hanya pada working directory proyek.
 
-- [ ] `TASK-P4-002` [Effort: M] Implementasi Last-Frame Extraction Service (-sseof -1 -frames:v 1)
+- [x] `TASK-P4-002` [Effort: M] Implementasi Last-Frame Extraction Service (-sseof -1 -frames:v 1)
   - Owner: Backend
   - References: FR-020, API-CONT-001, PRD/CONTINUITY_ENGINE.md §4.3
   - Depends on: TASK-P4-001
   - Done when: Ekstraksi frame terakhir dari berkas video MP4 hasil generasi selesai dalam waktu < 2 detik pada spesifikasi hardware minimum, menghasilkan file PNG beresolusi penuh tanpa artefak kompresi pada direktori proyek.
 
-- [ ] `TASK-P4-003` [Effort: S] Implementasi Automatic Last-Frame Reference Injection Service
+- [x] `TASK-P4-003` [Effort: S] Implementasi Automatic Last-Frame Reference Injection Service
   - Owner: Backend
   - References: FR-021, PRD/CONTINUITY_ENGINE.md §4.3
   - Depends on: TASK-P4-002, TASK-P2-001
   - Done when: Frame PNG yang diekstrak dari segmen $N$ secara otomatis terbaca dan disuntikkan ke dalam struktur payload request generasi segmen $N+1$ tanpa membutuhkan intervensi klik dari pengguna.
 
-- [ ] `TASK-P4-004` [Effort: M] Implementasi Sliding Context Window Prompt Carry-Over Engine
+- [x] `TASK-P4-004` [Effort: M] Implementasi Sliding Context Window Prompt Carry-Over Engine
   - Owner: Backend
   - References: FR-022, API-CONT-002, PRD/CONTINUITY_ENGINE.md §4.3
   - Depends on: TASK-P0-003
   - Done when: Prompt chaining merangkum teks prompt dari maksimal 3 segmen terakhir dengan format prefix `"Continuing from: [context]"`, memotong segmen yang lebih lama dari sliding window, dan mendukung mekanisme manual prompt override per segmen.
 
-- [ ] `TASK-P4-005` [Effort: S] Implementasi Persistent Visual Style Lock Manager
+- [x] `TASK-P4-005` [Effort: S] Implementasi Persistent Visual Style Lock Manager
   - Owner: Backend
   - References: FR-023, API-CONT-003, PRD/CONTINUITY_ENGINE.md §4.3
   - Depends on: TASK-P4-004
   - Done when: Deskriptor visual gaya persisten (misal: `"35mm cinematic lighting, photorealistic 8k"`) otomatis di-prepend ke setiap prompt generasi segmen dalam pipeline, serta tersimpan konsisten pada konfigurasi proyek.
 
-- [ ] `TASK-P4-006` [Effort: L] Implementasi Sequential Pipeline Orchestrator & State Machine
+- [x] `TASK-P4-006` [Effort: L] Implementasi Sequential Pipeline Orchestrator & State Machine
   - Owner: Backend
   - References: FR-024, NFR-002, NFR-003, NFR-005, API-GEN-001, API-GEN-002, API-GEN-003, API-GEN-004
   - Depends on: TASK-P2-005, TASK-P4-002, TASK-P4-003, TASK-P4-004, TASK-P4-005
   - Done when: State machine mengontrol eksekusi sekuensial node (status: `QUEUED` -> `GENERATING` -> `DOWNLOADING` -> `EXTRACTING_FRAME` -> `COMPLETE` / `FAILED`), dengan retry otomatis 3x ber-backoff eksponensial (2s, 4s, 8s) saat transient failure, serta mematuhi pipeline mutex singleton.
 
-- [ ] `TASK-P4-007` [Effort: M] Integrasi Pipeline Execution Progress & Node Status Visualization di UI
+- [x] `TASK-P4-007` [Effort: M] Integrasi Pipeline Execution Progress & Node Status Visualization di UI
   - Owner: Frontend
   - References: FR-024, DESIGN.md §5.2, PRD/CONTINUITY_ENGINE.md
   - Depends on: TASK-P3-006, TASK-P4-006

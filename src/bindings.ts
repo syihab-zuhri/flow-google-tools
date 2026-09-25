@@ -35,10 +35,47 @@ export const commands = {
             }
           : v) as typeof v,
     ),
+  extractFrame: (request: ExtractFrameRequest) =>
+    typedError<ExtractFrameResponse, IpcError>(
+      __TAURI_INVOKE("extract_frame", { request }),
+    ),
+  getPromptContext: (request: PromptContextRequest) =>
+    typedError<ComposedPromptResponse, IpcError>(
+      __TAURI_INVOKE("get_prompt_context", { request }),
+    ),
+  setStyleLock: (projectId: string, styleLockText: string | null) =>
+    typedError<StyleLockResponse, IpcError>(
+      __TAURI_INVOKE("set_style_lock", { projectId, styleLockText }),
+    ),
 };
 
 /* Types */
-export type ErrorDomain = "STORAGE" | "PROJECT";
+export type ComposedPromptResponse = {
+  finalComposedPrompt: string;
+  styleLockApplied: string | null;
+  contextCarryOverApplied: string | null;
+  totalCharacters: number;
+  isTruncated: boolean;
+};
+
+export type ErrorDomain = "STORAGE" | "PROJECT" | "CONTINUITY";
+
+export type ExtractFrameRequest = {
+  videoPath: string;
+  outputDirectory: string;
+  method: string;
+};
+
+export type ExtractFrameResponse = {
+  framePath: string;
+  resolution: FrameResolution;
+  extractionDurationMs: number;
+};
+
+export type FrameResolution = {
+  width: number;
+  height: number;
+};
 
 export type IpcError = {
   code: string;
@@ -90,6 +127,12 @@ export type ProjectSettings = {
   styleLockText: string | null;
 };
 
+export type PromptContextRequest = {
+  currentPrompt: string;
+  previousPrompts: string[];
+  styleLockText: string | null;
+};
+
 export type ProviderMode = "manual_handoff" | "official_api";
 
 export type SaveProjectRequest = {
@@ -103,6 +146,12 @@ export type SaveProjectResponse = {
   savedPath: string;
   savedAt: string;
   fileSizeBytes: number;
+};
+
+export type StyleLockResponse = {
+  projectId: string;
+  styleLockText: string | null;
+  updatedAt: number;
 };
 
 export type ViewportData = {

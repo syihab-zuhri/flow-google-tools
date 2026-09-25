@@ -22,6 +22,14 @@ Dokumen `CHANGELOG.md` berfungsi sebagai catatan historis komprehensif, log audi
 ## [Unreleased]
 
 ### Added
+- **Phase 4: Continuity Engine & FFmpeg Integration Complete [TASK-P4-001..007]:**
+  - Integrated FFmpeg runner for fast last-frame extraction (`-sseof -1 -update 1 -q:v 1`) with sanitized arguments.
+  - Implemented Prompt Context Carry-Over sliding window (up to 3 ancestor prompts) and persistent Visual Style Lock manager.
+  - Added Tauri IPC commands: `extract_frame` (`API-CONT-001`), `get_prompt_context` (`API-CONT-002`), `set_style_lock` (`API-CONT-003`).
+  - Implemented Sequential Pipeline Orchestrator (`pipeline-orchestrator.ts`) with Kahn's topological sort execution order, automatic frame carry-over injection to subsequent segments, and exponential backoff retry.
+  - Added `useContinuityPipeline` React hook and integrated "Run Pipeline" execution action into `CanvasToolbar`.
+  - Quality gates: 17/17 Rust tests, 12/12 Vitest suites (44 tests), 0 clippy warnings, and 100/100 Healthy score on `aislop scan`.
+
 - **Phase 3: Visual Canvas Node Editor Implementation Complete [TASK-P3-001..009]:**
   - Integrated `@xyflow/react` v12 with ultra-dark canvas `#0B0F19`, dot grid, MiniMap, Controls, and 60fps pan/zoom performance.
   - Implemented Zustand Flow Graph Store (`flow-graph-store.ts`) with up to 50 undo/redo history snapshots, multi-node selection, and dirty state management.
