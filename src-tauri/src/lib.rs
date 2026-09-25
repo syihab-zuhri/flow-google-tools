@@ -3,6 +3,7 @@ pub mod error;
 mod export;
 pub mod logging;
 mod project;
+mod vault;
 mod workspace;
 
 use specta_typescript::Typescript;
@@ -41,6 +42,11 @@ fn command_builder() -> Builder<tauri::Wry> {
             export::preview_export,
             export::export_video,
             export::export_segment,
+            vault::setup_vault,
+            vault::unlock_vault,
+            vault::lock_vault,
+            vault::check_vault_status,
+            vault::reset_vault,
         ])
 }
 

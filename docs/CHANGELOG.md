@@ -22,6 +22,15 @@ Dokumen `CHANGELOG.md` berfungsi sebagai catatan historis komprehensif, log audi
 ## [Unreleased]
 
 ### Added
+- **Phase 1: Security & Credential Vault Implementation Complete [TASK-P1-001..007]:**
+  - Implemented Key Derivation Function (KDF) stretching with unique 16-byte salt and SHA-256 HMAC canary verification.
+  - Implemented in-memory Key Encryption Key (KEK) management with automatic zeroization on lock/drop.
+  - Implemented Anti-Brute Force Lockout & Cooldown Manager: activates 30-second penalty after 3 consecutive failed unlock attempts.
+  - Implemented Inactivity Auto-Lock Timer daemon (default 15 minutes) and emergency reset verification (`I_UNDERSTAND_DATA_LOSS_IS_PERMANENT`).
+  - Added Tauri IPC commands: `setup_vault` (`API-VAULT-001`), `unlock_vault` (`API-VAULT-002`), `lock_vault` (`API-VAULT-003`), `check_vault_status` (`API-VAULT-004`), `reset_vault` (`API-VAULT-005`).
+  - Implemented `MasterPasswordModal` component with accessible Setup, Unlock, and Cooldown views, full CSF3 Storybook stories, and integrated vault status indicator in the application sidebar.
+  - Quality gates: 20/20 Rust tests, 17/17 Vitest suites (55 tests), 0 clippy warnings, and 100/100 Healthy score on `aislop scan`.
+
 - **Phase 5: Video Export & Preview Implementation Complete [TASK-P5-001..005]:**
   - Implemented FFmpeg Concat Demuxer Engine with temporary text manifest and stream-copy (`-c copy`) for seamless audio/video joining.
   - Implemented Video Transcoding Engine with MP4 H.264 / AAC and WebM VP9 / Opus presets across Original, 1080p, and 720p scaling filters.

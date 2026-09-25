@@ -63,6 +63,24 @@ export const commands = {
     typedError<ExportSegmentResponse, IpcError>(
       __TAURI_INVOKE("export_segment", { request }),
     ),
+  setupVault: (request: SetupVaultRequest) =>
+    typedError<SetupVaultResponse, IpcError>(
+      __TAURI_INVOKE("setup_vault", { request }),
+    ),
+  unlockVault: (request: UnlockVaultRequest) =>
+    typedError<UnlockVaultResponse, IpcError>(
+      __TAURI_INVOKE("unlock_vault", { request }),
+    ),
+  lockVault: () =>
+    typedError<LockVaultResponse, IpcError>(__TAURI_INVOKE("lock_vault")),
+  checkVaultStatus: () =>
+    typedError<VaultStatusResponse, IpcError>(
+      __TAURI_INVOKE("check_vault_status"),
+    ),
+  resetVault: (request: ResetVaultRequest) =>
+    typedError<ResetVaultResponse, IpcError>(
+      __TAURI_INVOKE("reset_vault", { request }),
+    ),
 };
 
 /* Types */
@@ -83,7 +101,12 @@ export type ConcatSegmentsRequest = {
   resolution: ResolutionPreset;
 };
 
-export type ErrorDomain = "STORAGE" | "PROJECT" | "CONTINUITY" | "EXPORT";
+export type ErrorDomain =
+  | "STORAGE"
+  | "PROJECT"
+  | "CONTINUITY"
+  | "EXPORT"
+  | "VAULT";
 
 export type ExportSegmentRequest = {
   segmentId: string;
@@ -151,6 +174,11 @@ export type LoadProjectResponse = {
   updatedAt: string;
 };
 
+export type LockVaultResponse = {
+  status: string;
+  lockedAt: number;
+};
+
 export type NodePosition = {
   x: number | null;
   y: number | null;
@@ -199,6 +227,15 @@ export type PromptContextRequest = {
 
 export type ProviderMode = "manual_handoff" | "official_api";
 
+export type ResetVaultRequest = {
+  confirmationFlag: string;
+};
+
+export type ResetVaultResponse = {
+  success: boolean;
+  wipedAt: number;
+};
+
 export type ResolutionPreset = "original" | "1080p" | "720p";
 
 export type SaveProjectRequest = {
@@ -214,10 +251,43 @@ export type SaveProjectResponse = {
   fileSizeBytes: number;
 };
 
+export type SetupVaultRequest = {
+  clientRequestId: string;
+  masterPassword: string;
+  confirmPassword: string;
+  autoLockTimeoutMinutes: number | null;
+};
+
+export type SetupVaultResponse = {
+  status: string;
+  vaultCreatedAt: number;
+  autoLockTimeoutMinutes: number;
+};
+
 export type StyleLockResponse = {
   projectId: string;
   styleLockText: string | null;
   updatedAt: number;
+};
+
+export type UnlockVaultRequest = {
+  masterPassword: string;
+};
+
+export type UnlockVaultResponse = {
+  status: string;
+  unlockedAt: number;
+  activeAccountCount: number;
+};
+
+export type VaultState = "uninitialized" | "locked" | "unlocked";
+
+export type VaultStatusResponse = {
+  state: VaultState;
+  autoLockTimeoutMinutes: number;
+  hasActiveLockout: boolean;
+  lockoutRemainingSeconds: number | null;
+  lastUnlockedAt: number | null;
 };
 
 export type ViewportData = {

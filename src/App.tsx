@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { CanvasWorkspace } from "./features/editor/CanvasWorkspace";
 import { useWorkspaceStatus } from "./features/workspace/use-workspace-status";
+import { MasterPasswordModal } from "./features/vault/MasterPasswordModal";
+import { useVault } from "./features/vault/use-vault";
 import "./App.css";
 
 const appCopy = {
@@ -27,7 +30,16 @@ const workspaceStatusCopy = {
 
 function App() {
   const { state, reload } = useWorkspaceStatus();
+  const { vaultState, setupVault, unlockVault, lockVault } = useVault();
+  const [isVaultModalOpen, setIsVaultModalOpen] = useState(false);
   const workspaceStatus = workspaceStatusCopy[state.kind];
+
+  const vaultBadgeColor =
+    vaultState.state === "unlocked"
+      ? "bg-emerald-500"
+      : vaultState.state === "locked"
+        ? "bg-[#BA7517]"
+        : "bg-blue-500";
 
   return (
     <main className="app-shell">
@@ -38,9 +50,24 @@ function App() {
         <span className="app-identity__eyebrow [writing-mode:vertical-rl] rotate-180">
           {appCopy.label}
         </span>
+
+        {/* Vault lock button in sidebar */}
+        <button
+          type="button"
+          aria-label={`Open Credential Vault (${vaultState.state})`}
+          onClick={() => setIsVaultModalOpen(true)}
+          title={`Vault: ${vaultState.state}`}
+          className="mt-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg border border-[#334155] bg-[#1e293b] hover:bg-[#334155] transition-colors"
+        >
+          <span
+            aria-hidden="true"
+            className={`h-2.5 w-2.5 rounded-full ${vaultBadgeColor}`}
+          />
+        </button>
+
         <output
           aria-label={workspaceStatus.label}
-          className="mt-auto mb-2 flex h-4 w-4 items-center justify-center"
+          className="mb-2 flex h-4 w-4 items-center justify-center"
         >
           <span
             aria-hidden="true"
@@ -80,6 +107,19 @@ function App() {
 
         {state.kind === "ready" && <CanvasWorkspace />}
       </section>
+
+      <MasterPasswordModal
+        isOpen={isVaultModalOpen}
+        vaultState={vaultState.state}
+        hasActiveLockout={vaultState.hasActiveLockout}
+        lockoutRemainingSeconds={vaultState.lockoutRemainingSeconds}
+        isLoading={vaultState.isLoading}
+        error={vaultState.error}
+        onClose={() => setIsVaultModalOpen(false)}
+        onSetup={setupVault}
+        onUnlock={unlockVault}
+        onLock={lockVault}
+      />
     </main>
   );
 }

@@ -92,43 +92,43 @@ Fase ini meletakkan fondasi teknis repositori, pipeline integrasi berkelanjutan 
 
 Fase ini mengimplementasikan cryptographic vault enclave lokal untuk mengamankan data sesi dan token akun Google Flow menggunakan standar enkripsi simetris modern dengan memory zeroization.
 
-- [ ] `TASK-P1-001` [Effort: M] Implementasi Argon2id Key Derivation & Canary Verification Engine
+- [x] `TASK-P1-001` [Effort: M] Implementasi Argon2id Key Derivation & Canary Verification Engine
   - Owner: Backend
   - References: FR-040, FR-041, SECURITY.md §3.1, API-VAULT-001
   - Depends on: TASK-P0-004, TASK-P0-005
   - Done when: Modul `vault::crypto` mengimplementasikan KDF Argon2id (m_cost=65536 KB, t_cost=3, p_cost=1), menghasilkan 256-bit Key Encryption Key (KEK), dan verifikasi string canary AES-256-GCM lulus unit test deterministik (sukses untuk password benar, tolak untuk password salah).
 
-- [ ] `TASK-P1-002` [Effort: M] Implementasi AES-256-GCM Payload Encryption & Ephemeral RAM Zeroization
+- [x] `TASK-P1-002` [Effort: M] Implementasi AES-256-GCM Payload Encryption & Ephemeral RAM Zeroization
   - Owner: Backend
   - References: FR-041, NFR-004, SECURITY.md §1.2, API-VAULT-001
   - Depends on: TASK-P1-001
   - Done when: Enkripsi dan dekripsi cookie menggunakan AES-256-GCM dengan 96-bit nonce unik dan 128-bit authentication tag; kunci master berada dalam struct terproteksi `secrecy::SecretBox` dengan trait `zeroize::ZeroizeOnDrop` yang teruji menghapus buffer RAM saat di-drop.
 
-- [ ] `TASK-P1-003` [Effort: M] Implementasi IPC Commands untuk Vault Lifecycle (Setup, Unlock, Lock, Status, Reset)
+- [x] `TASK-P1-003` [Effort: M] Implementasi IPC Commands untuk Vault Lifecycle (Setup, Unlock, Lock, Status, Reset)
   - Owner: Backend
   - References: FR-040, FR-041, API-VAULT-001, API-VAULT-002, API-VAULT-003, API-VAULT-004, API-VAULT-005
   - Depends on: TASK-P0-003, TASK-P1-002
   - Done when: Tauri commands `setup_vault`, `unlock_vault`, `lock_vault`, `check_vault_status`, dan `reset_vault` terdaftar di runtime, menghasilkan canonical error envelope (`E_VAULT_LOCKED`, `E_VAULT_BAD_PASSWORD`), dan status sinkron ke frontend.
 
-- [ ] `TASK-P1-004` [Effort: S] Implementasi Anti-Brute Force Lockout & Cooldown Manager
+- [x] `TASK-P1-004` [Effort: S] Implementasi Anti-Brute Force Lockout & Cooldown Manager
   - Owner: Backend
   - References: FR-040, SECURITY.md §3.1, API-VAULT-002
   - Depends on: TASK-P1-003
   - Done when: Kegagalan input master password 3 kali berturut-turut memicu periode cooldown 30 detik di backend; pemanggilan `unlock_vault` selama masa penalti mengembalikan error `E_VAULT_RATE_LIMITED` beserta parameter `retryAfterSeconds`.
 
-- [ ] `TASK-P1-005` [Effort: S] Implementasi Inactivity Auto-Lock Timer Daemon
+- [x] `TASK-P1-005` [Effort: S] Implementasi Inactivity Auto-Lock Timer Daemon
   - Owner: Backend
   - References: FR-042, SECURITY.md §1.2, API-VAULT-003
   - Depends on: TASK-P1-003
   - Done when: Timer inaktivitas 15 menit berjalan di backend supervisor Rust, me-reset countdown pada setiap pemanggilan IPC aktif, dan secara otomatis membersihkan buffer kunci dari memori serta memancarkan event `vault:state_changed` (`LOCKED`) saat timeout tercapai.
 
-- [ ] `TASK-P1-006` [Effort: M] Implementasi Master Password Modal & Zustand Vault Store di Frontend
+- [x] `TASK-P1-006` [Effort: M] Implementasi Master Password Modal & Zustand Vault Store di Frontend
   - Owner: Frontend
   - References: FR-040, DESIGN.md §7, DSD.md CMP-VAULT-UNLOCK-SCREEN
   - Depends on: TASK-P0-003, TASK-P1-003
   - Done when: Komponen `MasterPasswordModal` mengonsumsi design tokens (surface `#1E293B`, focus ring `#3B82F6`), menangani setup master password baru, membuka vault dengan feedback visual loading, dan menampilkan hitung mundur saat terkena cooldown anti-brute force.
 
-- [ ] `TASK-P1-007` [Effort: S] Audit Keamanan & Sanitasi Crash Handler (Zero-Log Leak Test)
+- [x] `TASK-P1-007` [Effort: S] Audit Keamanan & Sanitasi Crash Handler (Zero-Log Leak Test)
   - Owner: Tech Lead
   - References: NFR-004, SECURITY.md §2.2
   - Depends on: TASK-P1-003, TASK-P0-006
